@@ -12,9 +12,7 @@ public interface SequenceAlignment {
     };
     String ALPHABETS = "ACGT";
 
-    void run(String X, String Y);
+    void run();
 
-    String[] getAlignment(String x, String y, int[][] dp);
-
-    String[] getAlignment(String x, String y, List<Integer> dp);
+    String[] getAlignment();
 }
