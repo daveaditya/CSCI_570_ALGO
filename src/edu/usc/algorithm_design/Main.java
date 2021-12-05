@@ -33,6 +33,11 @@ public class Main {
 
             GeneratedOutput output = new GeneratedOutput(null, null, 0, 0.0);
 
+            SequenceAlignment sequenceAlignment = new SequenceAlignment(firstGeneratedBase, secondGeneratedBase);
+            sequenceAlignment.alignment(firstGeneratedBase, secondGeneratedBase);
+            String[] resultAlignment = sequenceAlignment.getAlignment(firstGeneratedBase, secondGeneratedBase);
+            System.out.println(resultAlignment[0]);
+
             writeOutput(Main.OUTPUT_FILE, output.toString());
         } catch(FileNotFoundException exc) {
             System.out.println("The input file `" + inputFileLocation + "` does not exists. Please try again!");

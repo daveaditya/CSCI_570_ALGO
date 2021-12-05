@@ -22,7 +22,7 @@ public class SequenceAlignment {
         this.P = new ArrayList<>();
     }
 
-    public void alignment(String X, String Y){
+    public int alignment(String X, String Y){
         System.out.println("First Base: " + X);
         System.out.println("Second Base: " + Y);
         StringBuilder result = new StringBuilder();
@@ -45,6 +45,17 @@ public class SequenceAlignment {
                         ), SequenceAlignment.MISMATCH_COST[ALPHABETS.indexOf(X.charAt(i))][ALPHABETS.indexOf(Y.charAt(j))] + this.dp[i - 1][j - 1]);
             }
         }
+
+        System.out.println("Printing DP");
+        for (int i = 0; i < xLength; i++) {
+            for (int j = 0; j < yLength; j++) {
+                System.out.print(dp[i][j] + "\t");
+            }
+            System.out.println();
+        }
+
+        System.out.println("Final alignment cost :: " + dp[xLength-1][yLength-1]);
+        return dp[xLength][yLength];
     }
 
     /** Divide and Conquer - Efficient Implementation
@@ -149,7 +160,20 @@ public class SequenceAlignment {
         }
 
         // Todo: To remove extra gaps or not? Refer Geeksforgeeks
-
+        int id = 1;
+        for (i = maxLength; i >= 1; i--) {
+            if (xResult[i] == '_' && yResult[i] == '_') {
+                id = i + 1;
+                break;
+            }
+        }
+        for (i = id; i <= maxLength; i++) {
+            System.out.print(xResult[i]);
+        }
+        System.out.print("\n");
+        for (i = id; i <= maxLength; i++) {
+            System.out.print(yResult[i]);
+        }
         return new String[]{new String(xResult), new String(yResult)};
     }
 
