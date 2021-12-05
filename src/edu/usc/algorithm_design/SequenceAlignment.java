@@ -139,15 +139,15 @@ public class SequenceAlignment {
                 i--;
                 j--;
             }
-            else if (this.dp[i - 1][j] + SequenceAlignment.GAP_PENALTY == this.dp[i][j]) {
-                xResult[xPosition--] = x.charAt(i-1);
-                yResult[yPosition--] = '_';
-                i--;
-            }
             else if (this.dp[i][j - 1] + SequenceAlignment.GAP_PENALTY == this.dp[i][j]) {
                 xResult[xPosition--] = '_';
                 yResult[yPosition--] = y.charAt(j-1);
                 j--;
+            }
+            else if (this.dp[i - 1][j] + SequenceAlignment.GAP_PENALTY == this.dp[i][j]) {
+                xResult[xPosition--] = x.charAt(i-1);
+                yResult[yPosition--] = '_';
+                i--;
             }
         }
         while (xPosition > 0) {
@@ -159,7 +159,6 @@ public class SequenceAlignment {
             else yResult[yPosition--] = (int)'_';
         }
 
-        // Todo: To remove extra gaps or not? Refer Geeksforgeeks
         int id = 1;
         for (i = maxLength; i >= 1; i--) {
             if (xResult[i] == '_' && yResult[i] == '_') {
@@ -168,16 +167,13 @@ public class SequenceAlignment {
             }
         }
 
-//        for (i = id; i <= maxLength; i++) {
-//            System.out.print((char)xResult[i]);
-//        }
-//        System.out.print("\n");
-//        for (i = id; i <= maxLength; i++)
-//        {
-//            System.out.print((char)yResult[i]);
-//        }
-
-
+        for (i = id; i <= maxLength; i++) {
+            System.out.print((char)xResult[i]);
+        }
+        System.out.print("\n");
+        for (i = id; i <= maxLength; i++) {
+            System.out.print((char)yResult[i]);
+        }
         return new String[]{new String(xResult), new String(yResult)};
     }
 
