@@ -117,8 +117,8 @@ public class SequenceAlignment {
     public String[] getAlignment(String x, String y) {
         int maxLength = x.length() + y.length();
 
-        int i = x.length() - 1;
-        int j = y.length() - 1;
+        int i = x.length();
+        int j = y.length();
 
         int xPosition = maxLength;
         int yPosition = maxLength;
