@@ -42,7 +42,7 @@ public class SequenceAlignment {
                 this.dp[i][j] = Math.min(
                         Math.min(
                                 SequenceAlignment.GAP_PENALTY + this.dp[i - 1][j], SequenceAlignment.GAP_PENALTY + this.dp[i][j - 1]
-                        ), SequenceAlignment.MISMATCH_COST[ALPHABETS.indexOf(X.charAt(i))][ALPHABETS.indexOf(Y.charAt(j))] + this.dp[i - 1][j - 1]);
+                        ), SequenceAlignment.MISMATCH_COST[ALPHABETS.indexOf(X.charAt(i-1))][ALPHABETS.indexOf(Y.charAt(j-1))] + this.dp[i - 1][j - 1]);
             }
         }
 
@@ -133,7 +133,7 @@ public class SequenceAlignment {
                 i--;
                 j--;
             }
-            else if (this.dp[i - 1][j - 1] + SequenceAlignment.MISMATCH_COST[ALPHABETS.indexOf(x.charAt(i))][ALPHABETS.indexOf(y.charAt(j))] == this.dp[i][j]) {
+            else if (this.dp[i - 1][j - 1] + SequenceAlignment.MISMATCH_COST[ALPHABETS.indexOf(x.charAt(i-1))][ALPHABETS.indexOf(y.charAt(j-1))] == this.dp[i][j]) {
                 xResult[xPosition--] = x.charAt(i-1);
                 yResult[yPosition--] = y.charAt(j-1);
                 i--;
@@ -168,14 +168,14 @@ public class SequenceAlignment {
             }
         }
 
-        for (i = id; i <= maxLength; i++) {
-            System.out.print((char)xResult[i]);
-        }
-        System.out.print("\n");
-        for (i = id; i <= maxLength; i++)
-        {
-            System.out.print((char)yResult[i]);
-        }
+//        for (i = id; i <= maxLength; i++) {
+//            System.out.print((char)xResult[i]);
+//        }
+//        System.out.print("\n");
+//        for (i = id; i <= maxLength; i++)
+//        {
+//            System.out.print((char)yResult[i]);
+//        }
 
 
         return new String[]{new String(xResult), new String(yResult)};
@@ -238,14 +238,14 @@ public class SequenceAlignment {
                 break;
             }
         }
-        for (i = id; i <= maxLength; i++) {
-            System.out.print(xResult[i]);
-        }
-        System.out.print("\n");
-        for (i = id; i <= maxLength; i++)
-        {
-            System.out.print(yResult[i]);
-        }
+//        for (i = id; i <= maxLength; i++) {
+//            System.out.print(xResult[i]);
+//        }
+//        System.out.print("\n");
+//        for (i = id; i <= maxLength; i++)
+//        {
+//            System.out.print(yResult[i]);
+//        }
         return new String[]{new String(xResult), new String(yResult)};
     }
 
