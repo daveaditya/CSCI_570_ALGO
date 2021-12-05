@@ -40,7 +40,7 @@ def main(output_location, number_of_cases):
 if __name__ == "__main__":
 
   parser = argparse.ArgumentParser()
-  parser.add_argument("-ol", "--output-location", type=str, default="./output", help="Location of the direrctory where to output the test files. Do not end with a slash.")
+  parser.add_argument("-ol", "--output-location", type=str, default="./../input", help="Location of the direrctory where to output the test files. Do not end with a slash.")
   parser.add_argument("-n", "--number-of-cases", type=int, default=16, help="Number of test files to generate.")
   args = parser.parse_args()
   
