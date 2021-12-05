@@ -167,14 +167,18 @@ public class SequenceAlignment {
                 break;
             }
         }
+
+        StringBuilder xFinalResult = new StringBuilder();
         for (i = id; i <= maxLength; i++) {
-            System.out.print(xResult[i]);
+            xFinalResult.append(xResult[i]);
         }
+
+        StringBuilder yFinalResult = new StringBuilder();
         System.out.print("\n");
         for (i = id; i <= maxLength; i++) {
-            System.out.print(yResult[i]);
+            yFinalResult.append(yResult[i]);
         }
-        return new String[]{new String(xResult), new String(yResult)};
+        return new String[]{xFinalResult.toString(), yFinalResult.toString()};
     }
 
 
