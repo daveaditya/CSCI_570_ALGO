@@ -29,7 +29,7 @@ def main(output_location, number_of_cases):
         # Write indices
         current = len(ALPHABETS)
 
-        for _ in range(0, random.randint(0, 8)):
+        for _ in range(0, random.randint(3, 7)):
           index = random.randint(0, current)
           current += current
 
