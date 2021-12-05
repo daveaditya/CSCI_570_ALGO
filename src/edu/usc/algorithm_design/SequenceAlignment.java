@@ -18,7 +18,7 @@ public class SequenceAlignment {
     private List<Integer> P = null;
 
     public SequenceAlignment(String X, String Y) {
-        this.dp = new int[X.length() + 1][Y.length() + 1];
+        this.dp = new int[X.length()][Y.length()];
         this.P = new ArrayList<>();
     }
 
@@ -49,7 +49,7 @@ public class SequenceAlignment {
         System.out.println("Printing DP");
         for (int i = 0; i < xLength; i++) {
             for (int j = 0; j < yLength; j++) {
-                System.out.print(dp[i][j] + "\t");
+                System.out.format("%6d",dp[i][j]);
             }
             System.out.println();
         }
@@ -117,8 +117,8 @@ public class SequenceAlignment {
     public String[] getAlignment(String x, String y) {
         int maxLength = x.length() + y.length();
 
-        int i = x.length();
-        int j = y.length();
+        int i = x.length() - 1;
+        int j = y.length() - 1;
 
         int xPosition = maxLength;
         int yPosition = maxLength;
@@ -126,27 +126,27 @@ public class SequenceAlignment {
         char[] xResult = new char[maxLength + 1];
         char[] yResult = new char[maxLength + 1];
 
-        while ( !(i == 0 || j == 0)) {
-            if (x.charAt(i - 1) == y.charAt(j - 1)) {
-                xResult[xPosition--] = x.charAt(i - 1);
-                yResult[yPosition--] = y.charAt(j - 1);
+        while (!(i == 0 || j == 0)) {
+            if (x.charAt(i) == y.charAt(j)) {
+                xResult[xPosition--] = x.charAt(i);
+                yResult[yPosition--] = y.charAt(j);
                 i--;
                 j--;
             }
             else if (this.dp[i - 1][j - 1] + SequenceAlignment.MISMATCH_COST[ALPHABETS.indexOf(x.charAt(i-1))][ALPHABETS.indexOf(y.charAt(j-1))] == this.dp[i][j]) {
-                xResult[xPosition--] = x.charAt(i - 1);
-                yResult[yPosition--] = y.charAt(j - 1);
+                xResult[xPosition--] = x.charAt(i);
+                yResult[yPosition--] = y.charAt(j);
                 i--;
                 j--;
             }
             else if (this.dp[i - 1][j] + SequenceAlignment.GAP_PENALTY == this.dp[i][j]) {
-                xResult[xPosition--] = x.charAt(i - 1);
+                xResult[xPosition--] = x.charAt(i);
                 yResult[yPosition--] = '_';
                 i--;
             }
             else if (this.dp[i][j - 1] + SequenceAlignment.GAP_PENALTY == this.dp[i][j]) {
                 xResult[xPosition--] = '_';
-                yResult[yPosition--] = y.charAt(j - 1);
+                yResult[yPosition--] = y.charAt(j);
                 j--;
             }
         }
