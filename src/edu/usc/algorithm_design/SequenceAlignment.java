@@ -42,7 +42,7 @@ public class SequenceAlignment {
                 this.dp[i][j] = Math.min(
                         Math.min(
                                 SequenceAlignment.GAP_PENALTY + this.dp[i - 1][j], SequenceAlignment.GAP_PENALTY + this.dp[i][j - 1]
-                        ), SequenceAlignment.MISMATCH_COST[ALPHABETS.indexOf(X.charAt(i))][ALPHABETS.indexOf(Y.charAt(j))] + this.dp[i - 1][j - 1]);
+                        ), SequenceAlignment.MISMATCH_COST[ALPHABETS.indexOf(X.charAt(i-1))][ALPHABETS.indexOf(Y.charAt(j-1))] + this.dp[i - 1][j - 1]);
             }
         }
 
@@ -55,7 +55,7 @@ public class SequenceAlignment {
         }
 
         System.out.println("Final alignment cost :: " + dp[xLength-1][yLength-1]);
-        return dp[xLength][yLength];
+        return dp[xLength-1][yLength-1];
     }
 
     /** Divide and Conquer - Efficient Implementation
@@ -133,7 +133,7 @@ public class SequenceAlignment {
                 i--;
                 j--;
             }
-            else if (this.dp[i - 1][j - 1] + SequenceAlignment.MISMATCH_COST[ALPHABETS.indexOf(x.charAt(i))][ALPHABETS.indexOf(y.charAt(j))] == this.dp[i][j]) {
+            else if (this.dp[i - 1][j - 1] + SequenceAlignment.MISMATCH_COST[ALPHABETS.indexOf(x.charAt(i-1))][ALPHABETS.indexOf(y.charAt(j-1))] == this.dp[i][j]) {
                 xResult[xPosition--] = x.charAt(i - 1);
                 yResult[yPosition--] = y.charAt(j - 1);
                 i--;
@@ -200,7 +200,7 @@ public class SequenceAlignment {
                 i--;
                 j--;
             }
-            else if (dp[i - 1][j - 1] + SequenceAlignment.MISMATCH_COST[ALPHABETS.indexOf(x.charAt(i))][ALPHABETS.indexOf(y.charAt(j))] == dp[i][j]) {
+            else if (dp[i - 1][j - 1] + SequenceAlignment.MISMATCH_COST[ALPHABETS.indexOf(x.charAt(i-1))][ALPHABETS.indexOf(y.charAt(j-1))] == dp[i][j]) {
                 xResult[xPosition--] = x.charAt(i - 1);
                 yResult[yPosition--] = y.charAt(j - 1);
                 i--;
@@ -227,7 +227,21 @@ public class SequenceAlignment {
         }
 
         // Todo: To remove extra gaps or not? Refer Geeksforgeeks
-
+        int id = 1;
+        for (i = maxLength; i >= 1; i--) {
+            if (yResult[i] == '_' && xResult[i] == '_') {
+                id = i + 1;
+                break;
+            }
+        }
+        for (i = id; i <= maxLength; i++) {
+            System.out.print(xResult[i]);
+        }
+        System.out.print("\n");
+        for (i = id; i <= maxLength; i++)
+        {
+            System.out.print(yResult[i]);
+        }
         return new String[]{new String(xResult), new String(yResult)};
     }
 

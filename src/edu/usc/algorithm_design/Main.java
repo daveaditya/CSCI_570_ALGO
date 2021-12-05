@@ -36,7 +36,8 @@ public class Main {
             SequenceAlignment sequenceAlignment = new SequenceAlignment(firstGeneratedBase, secondGeneratedBase);
             sequenceAlignment.alignment(firstGeneratedBase, secondGeneratedBase);
             String[] resultAlignment = sequenceAlignment.getAlignment(firstGeneratedBase, secondGeneratedBase);
-            System.out.println(resultAlignment[0]);
+            System.out.println("First String" + resultAlignment[0]);
+            System.out.println("Second String" + resultAlignment[1]);
 
             writeOutput(Main.OUTPUT_FILE, output.toString());
         } catch(FileNotFoundException exc) {
