@@ -1,6 +1,7 @@
 package edu.usc.algorithm_design;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class SequenceAlignment {
@@ -102,7 +103,7 @@ public class SequenceAlignment {
         }
     }
 
-    public String[] getAlignment(String x, String y, int[][] dp) {
+    public String[] getAlignment(String x, String y) {
         int maxLength = x.length() + y.length();
 
         int i = x.length();
@@ -113,6 +114,60 @@ public class SequenceAlignment {
 
         char[] xResult = new char[maxLength + 1];
         char[] yResult = new char[maxLength + 1];
+
+        while ( !(i == 0 || j == 0)) {
+            if (x.charAt(i - 1) == y.charAt(j - 1)) {
+                xResult[xPosition--] = x.charAt(i - 1);
+                yResult[yPosition--] = y.charAt(j - 1);
+                i--;
+                j--;
+            }
+            else if (this.dp[i - 1][j - 1] + SequenceAlignment.MISMATCH_COST[ALPHABETS.indexOf(x.charAt(i))][ALPHABETS.indexOf(y.charAt(j))] == this.dp[i][j]) {
+                xResult[xPosition--] = x.charAt(i - 1);
+                yResult[yPosition--] = y.charAt(j - 1);
+                i--;
+                j--;
+            }
+            else if (this.dp[i - 1][j] + SequenceAlignment.GAP_PENALTY == this.dp[i][j]) {
+                xResult[xPosition--] = x.charAt(i - 1);
+                yResult[yPosition--] = '_';
+                i--;
+            }
+            else if (this.dp[i][j - 1] + SequenceAlignment.GAP_PENALTY == this.dp[i][j]) {
+                xResult[xPosition--] = '_';
+                yResult[yPosition--] = y.charAt(j - 1);
+                j--;
+            }
+        }
+        while (xPosition > 0) {
+            if (i > 0) xResult[xPosition--] = x.charAt(--i);
+            else xResult[xPosition--] = (int)'_';
+        }
+        while (yPosition > 0) {
+            if (j > 0) yResult[yPosition--] = y.charAt(--j);
+            else yResult[yPosition--] = (int)'_';
+        }
+
+        // Todo: To remove extra gaps or not? Refer Geeksforgeeks
+
+        return new String[]{new String(xResult), new String(yResult)};
+    }
+
+
+    public String[] getAlignmentDC(String x, String y) {
+        int maxLength = x.length() + y.length();
+
+        int i = x.length();
+        int j = y.length();
+
+        int xPosition = maxLength;
+        int yPosition = maxLength;
+
+        char[] xResult = new char[maxLength + 1];
+        char[] yResult = new char[maxLength + 1];
+
+        List<Integer> P = new ArrayList<>(this.P);
+        Collections.reverse(P);
 
         while ( !(i == 0 || j == 0)) {
             if (x.charAt(i - 1) == y.charAt(j - 1)) {
