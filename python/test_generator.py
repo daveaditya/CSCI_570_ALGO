@@ -1,3 +1,4 @@
+import math
 import argparse
 import os
 import random
@@ -26,10 +27,13 @@ def main(output_location, number_of_cases):
         file.write(f"{''.join(random.sample(ALPHABETS, len(ALPHABETS)))}\n")
 
         # Write indices
-        length = len(ALPHABETS)
-        for _ in range(random.randint(0, 100)):
-          index = random.randint(0, length % 100)
-          length += index
+        current = len(ALPHABETS)
+
+        for _ in range(0, random.randint(0, 8)):
+          index = random.randint(0, current)
+          current += current
+
+          # Write index to the file
           file.write(f"{index}\n")
       # We're done
 
