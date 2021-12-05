@@ -42,7 +42,7 @@ public class SequenceAlignment {
                 this.dp[i][j] = Math.min(
                         Math.min(
                                 SequenceAlignment.GAP_PENALTY + this.dp[i - 1][j], SequenceAlignment.GAP_PENALTY + this.dp[i][j - 1]
-                        ), SequenceAlignment.MISMATCH_COST[ALPHABETS.indexOf(X.charAt(i-1))][ALPHABETS.indexOf(Y.charAt(j-1))] + this.dp[i - 1][j - 1]);
+                        ), SequenceAlignment.MISMATCH_COST[ALPHABETS.indexOf(X.charAt(i))][ALPHABETS.indexOf(Y.charAt(j))] + this.dp[i - 1][j - 1]);
             }
         }
 
@@ -127,26 +127,26 @@ public class SequenceAlignment {
         char[] yResult = new char[maxLength + 1];
 
         while (!(i == 0 || j == 0)) {
-            if (x.charAt(i) == y.charAt(j)) {
-                xResult[xPosition--] = x.charAt(i);
-                yResult[yPosition--] = y.charAt(j);
+            if (x.charAt(i - 1) == y.charAt(j-1)) {
+                xResult[xPosition--] = x.charAt(i-1);
+                yResult[yPosition--] = y.charAt(j-1);
                 i--;
                 j--;
             }
-            else if (this.dp[i - 1][j - 1] + SequenceAlignment.MISMATCH_COST[ALPHABETS.indexOf(x.charAt(i-1))][ALPHABETS.indexOf(y.charAt(j-1))] == this.dp[i][j]) {
-                xResult[xPosition--] = x.charAt(i);
-                yResult[yPosition--] = y.charAt(j);
+            else if (this.dp[i - 1][j - 1] + SequenceAlignment.MISMATCH_COST[ALPHABETS.indexOf(x.charAt(i))][ALPHABETS.indexOf(y.charAt(j))] == this.dp[i][j]) {
+                xResult[xPosition--] = x.charAt(i-1);
+                yResult[yPosition--] = y.charAt(j-1);
                 i--;
                 j--;
             }
             else if (this.dp[i - 1][j] + SequenceAlignment.GAP_PENALTY == this.dp[i][j]) {
-                xResult[xPosition--] = x.charAt(i);
+                xResult[xPosition--] = x.charAt(i-1);
                 yResult[yPosition--] = '_';
                 i--;
             }
             else if (this.dp[i][j - 1] + SequenceAlignment.GAP_PENALTY == this.dp[i][j]) {
                 xResult[xPosition--] = '_';
-                yResult[yPosition--] = y.charAt(j);
+                yResult[yPosition--] = y.charAt(j-1);
                 j--;
             }
         }
@@ -168,17 +168,17 @@ public class SequenceAlignment {
             }
         }
 
-        StringBuilder xFinalResult = new StringBuilder();
         for (i = id; i <= maxLength; i++) {
-            xFinalResult.append(xResult[i]);
+            System.out.print((char)xResult[i]);
+        }
+        System.out.print("\n");
+        for (i = id; i <= maxLength; i++)
+        {
+            System.out.print((char)yResult[i]);
         }
 
-        StringBuilder yFinalResult = new StringBuilder();
-        System.out.print("\n");
-        for (i = id; i <= maxLength; i++) {
-            yFinalResult.append(yResult[i]);
-        }
-        return new String[]{xFinalResult.toString(), yFinalResult.toString()};
+
+        return new String[]{new String(xResult), new String(yResult)};
     }
 
 
