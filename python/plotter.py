@@ -17,7 +17,7 @@ def plot(df: pd.DataFrame, output_location: str):
   ax.set_xlabel ("Length of Input")
   ax.set_ylabel ("Time (seconds)")
   plt.legend(labels=["Basic Version","Memory Efficient Version"])
-  line.savefig(output_location)
+  line.savefig(f"{output_location}/basic.jpeg")
 
   line,ax = plt.subplots(figsize=(10,6))
   ax = sns.lineplot(x='length_of_input', y='memory_basic', data=df)
@@ -104,12 +104,20 @@ def main(input_location: str, output_location: str, output_directory: str):
       memory_values_memory_efficient.append(float(lines_in_memory_efficient_file[4]))
 
   # Create dataframe from the collected data
+  # df = pd.DataFrame({
+  #   "length_of_input": mn_values,
+  #   "time_basic": time_values_basic,
+  #   "time_memory_efficient": time_values_memory_efficient,
+  #   "memory_basic": memory_values_basic,
+  #   "memory_memory_efficient": memory_values_memory_efficient
+  # })
+
   df = pd.DataFrame({
-    "length_of_input": mn_values,
-    "time_basic": time_values_basic,
-    "time_memory_efficient": time_values_memory_efficient,
-    "memory_basic": memory_values_basic,
-    "memory_memory_efficient": memory_values_memory_efficient
+    "length_of_input": [1, 2, 3, 4, 5],
+    "time_basic": [1, 2, 3, 4, 5],
+    "time_memory_efficient": [2, 3, 4, 6, 7],
+    "memory_basic": [1, 2, 3 ,4, 5],
+    "memory_memory_efficient": [5, 4, 1, 6, 7]
   })
 
 
