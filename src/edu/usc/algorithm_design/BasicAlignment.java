@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-public class Main {
+public class BasicAlignment {
 
     public static final String OUTPUT_FILE = "./output.txt";
 
@@ -37,13 +37,7 @@ public class Main {
             sequenceAlignment.alignment(firstGeneratedBase, secondGeneratedBase);
             String[] resultAlignment = sequenceAlignment.getAlignment(firstGeneratedBase, secondGeneratedBase);
 
-            System.out.println("\n DNC approach:: \n");
-
-            sequenceAlignment.divideAndConquerAlignment(firstGeneratedBase, secondGeneratedBase);
-//            sequenceAlignment.divideAndConquerAlignment_Lecture(firstGeneratedBase,secondGeneratedBase);
-            System.out.println(sequenceAlignment.getP().toString());
-
-            writeOutput(Main.OUTPUT_FILE, output.toString());
+            writeOutput(BasicAlignment.OUTPUT_FILE, output.toString());
         } catch(FileNotFoundException exc) {
             System.out.println("The input file `" + inputFileLocation + "` does not exists. Please try again!");
         }
@@ -105,19 +99,6 @@ public class Main {
         }
 
         return new ParsedInput(firstBase, firstBaseIndices, secondBase, secondBaseIndices);
-
-        // TODO : remove later. This part is to check only for the string generation part.
-//        String finalString1 = null;
-//        String finalString2 = null;
-//        String newString = null;
-//        if (firstBase != null || firstBaseIndices != null) {
-//            finalString1 = inputStringGenerator(firstBase, firstBaseIndices); // currently only for first base
-//        }
-//        if (secondBase != null || secondBaseIndices != null) {
-//            finalString2 = inputStringGenerator(secondBase, secondBaseIndices); // currently only for first base
-//        }
-//        newString = finalString1 + "\n" + finalString2;
-//        return newString;
     }
 
     private static void writeOutput(String outputFile, String output) {
