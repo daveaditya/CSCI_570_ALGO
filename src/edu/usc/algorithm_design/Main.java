@@ -37,6 +37,12 @@ public class Main {
             sequenceAlignment.alignment(firstGeneratedBase, secondGeneratedBase);
             String[] resultAlignment = sequenceAlignment.getAlignment(firstGeneratedBase, secondGeneratedBase);
 
+            System.out.println("\n DNC approach:: \n");
+
+            sequenceAlignment.divideAndConquerAlignment(firstGeneratedBase, secondGeneratedBase);
+//            sequenceAlignment.divideAndConquerAlignment_Lecture(firstGeneratedBase,secondGeneratedBase);
+            System.out.println(sequenceAlignment.getP().toString());
+
             writeOutput(Main.OUTPUT_FILE, output.toString());
         } catch(FileNotFoundException exc) {
             System.out.println("The input file `" + inputFileLocation + "` does not exists. Please try again!");
