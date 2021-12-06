@@ -164,7 +164,16 @@ public class SequenceAlignment {
             }
         }
 
-        P.add(new Pair(best_q, n / 2));
+        boolean alreadyAdded = true;
+        for(Pair pair : P) {
+            if(pair.getX() == best_q && pair.getY() == n / 2) {
+                alreadyAdded = !alreadyAdded;
+                break;
+            }
+        }
+        if(alreadyAdded) {
+            P.add(new Pair(best_q, n / 2, left[best_q][1]));
+        }
 
         divideAndConquerAlignment(X.substring(0, best_q), Y.substring(0, n / 2));
         divideAndConquerAlignment(X.substring(best_q, m), Y.substring(n / 2, n));
