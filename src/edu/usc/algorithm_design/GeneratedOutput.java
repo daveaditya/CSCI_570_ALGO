@@ -1,20 +1,18 @@
 package edu.usc.algorithm_design;
 
-import java.math.BigInteger;
 
 public class GeneratedOutput {
 
     String firstAlignment;
-
     String secondAlignment;
-
+    float alignmentCost;
     double timeTaken;
-
     double memoryUsed;
 
-    public GeneratedOutput(String firstAlignment, String secondAlignment, double timeTaken, double memoryUsed) {
+    public GeneratedOutput(String firstAlignment, String secondAlignment, float alignmentCost, double timeTaken, double memoryUsed) {
         this.firstAlignment = firstAlignment;
         this.secondAlignment = secondAlignment;
+        this.alignmentCost = alignmentCost;
         this.timeTaken = timeTaken;
         this.memoryUsed = memoryUsed;
     }
@@ -51,8 +49,16 @@ public class GeneratedOutput {
         this.memoryUsed = memoryUsed;
     }
 
+    public float getAlignmentCost() {
+        return alignmentCost;
+    }
+
+    public void setAlignmentCost(float alignmentCost) {
+        this.alignmentCost = alignmentCost;
+    }
+
     @Override
     public String toString() {
-        return firstAlignment + "\n" + secondAlignment + "\n" + timeTaken + "\n" + "memoryUsed";
+        return firstAlignment + "\n" + secondAlignment + "\n" + alignmentCost + "\n" +  timeTaken + "\n" + memoryUsed;
     }
 }

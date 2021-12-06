@@ -22,26 +22,61 @@ public class BasicAlignment {
         try {
             ParsedInput input = parseInputFile(inputFileLocation);
 
-            System.out.println("Output: \n" + input);
-
             // Generate strings for input to the sequence alignment from the input
             String firstGeneratedBase = InputStringGenerator.run(input.getFirstBase(), input.getFirstBaseIndices());
             String secondGeneratedBase = InputStringGenerator.run(input.getSecondBase(), input.getSecondBaseIndices());
 
-            System.out.println("First Base :: " + firstGeneratedBase);
-            System.out.println("Second Base :: " + secondGeneratedBase);
-
-            GeneratedOutput output = new GeneratedOutput(null, null, 0, 0.0);
 
             SequenceAlignment sequenceAlignment = new SequenceAlignment(firstGeneratedBase, secondGeneratedBase);
-            sequenceAlignment.alignment(firstGeneratedBase, secondGeneratedBase);
+            float alignmentCost = sequenceAlignment.alignment(firstGeneratedBase, secondGeneratedBase);
             String[] resultAlignment = sequenceAlignment.getAlignment(firstGeneratedBase, secondGeneratedBase);
 
+            String firstAlignment = printAlignmentX(firstGeneratedBase, secondGeneratedBase, resultAlignment[0].toCharArray(), resultAlignment[1].toCharArray());
+            String secondAlignment = printAlignmentY(firstGeneratedBase, secondGeneratedBase, resultAlignment[0].toCharArray(), resultAlignment[1].toCharArray());
+            GeneratedOutput output = new GeneratedOutput(firstAlignment, secondAlignment, alignmentCost, 0, 0.0);
             writeOutput(BasicAlignment.OUTPUT_FILE, output.toString());
         } catch(FileNotFoundException exc) {
             System.out.println("The input file `" + inputFileLocation + "` does not exists. Please try again!");
         }
     }
+
+    public static String printAlignmentX(String X, String Y, char[] xResult, char[] yResult) {
+        StringBuffer stringBuffer = new StringBuffer();
+        int maxLength = X.length() + Y.length();
+        int id = 1;
+        for (int i = maxLength; i >= 1; i--) {
+            if (xResult[i] == '_' && yResult[i] == '_') {
+                id = i + 1;
+                break;
+            }
+        }
+
+        for (int i = id; i <= maxLength; i++) {
+            System.out.print(xResult[i]);
+            stringBuffer.append(xResult[i]);
+        }
+        System.out.print("\n");
+        return String.valueOf(stringBuffer);
+    }
+
+    public static String printAlignmentY(String X, String Y, char[] xResult, char[] yResult) {
+        StringBuffer stringBuffer = new StringBuffer();
+        int maxLength = X.length() + Y.length();
+        int id = 1;
+        for (int i = maxLength; i >= 1; i--) {
+            if (xResult[i] == '_' && yResult[i] == '_') {
+                id = i + 1;
+                break;
+            }
+        }
+        System.out.print("\n");
+        for (int i = id; i <= maxLength; i++) {
+            System.out.print(yResult[i]);
+            stringBuffer.append(yResult[i]);
+        }
+        return String.valueOf(stringBuffer);
+    }
+
 
     /** Input validation -> 2j*str1.length and 2k*str2.length
      * @param firstBase First base string

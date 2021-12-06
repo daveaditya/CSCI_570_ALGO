@@ -32,7 +32,7 @@ public class SequenceAlignment {
     }
 
 
-    public int alignment(String X, String Y) {
+    public float alignment(String X, String Y) {
         int m = X.length();
         int n = Y.length();
 
@@ -51,16 +51,6 @@ public class SequenceAlignment {
                         ), SequenceAlignment.MISMATCH_COST[ALPHABETS.indexOf(X.charAt(i - 1))][ALPHABETS.indexOf(Y.charAt(j - 1))] + this.dp[i - 1][j - 1]);
             }
         }
-
-//        System.out.println("Printing DP");
-//        for (int i = 0; i < m; i++) {
-//            for (int j = 0; j < n; j++) {
-//                System.out.format("%6d",dp[i][j]);
-//            }
-//            System.out.println();
-//        }
-
-//        System.out.println("Final alignment cost :: " + dp[m-1][n-1]);
         return dp[m][n];
     }
 
@@ -224,21 +214,6 @@ public class SequenceAlignment {
             else yResult[yPosition--] = (int) '_';
         }
 
-        int id = 1;
-        for (i = maxLength; i >= 1; i--) {
-            if (xResult[i] == '_' && yResult[i] == '_') {
-                id = i + 1;
-                break;
-            }
-        }
-
-        for (i = id; i <= maxLength; i++) {
-            System.out.print(xResult[i]);
-        }
-        System.out.print("\n");
-        for (i = id; i <= maxLength; i++) {
-            System.out.print(yResult[i]);
-        }
         return new String[]{new String(xResult), new String(yResult)};
     }
 
