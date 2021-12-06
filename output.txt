@@ -1,4 +1,0 @@
-null
-null
-0.0
-memoryUsed
