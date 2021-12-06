@@ -35,7 +35,14 @@ public class MemoryEfficientAlignment {
 
             SequenceAlignment sequenceAlignment = new SequenceAlignment(firstGeneratedBase, secondGeneratedBase);
             sequenceAlignment.divideAndConquerAlignment(firstGeneratedBase, secondGeneratedBase);
-            System.out.println(sequenceAlignment.getP().toString());
+            String[] result = sequenceAlignment.getAlignmentDC(firstGeneratedBase,secondGeneratedBase);
+            System.out.println("Final alignment 1:: " + result[0]);
+            System.out.println("final al 1 :: " + result[1]);
+
+            System.out.println(result[0].length());
+            System.out.println(result[1].length());
+
+          //  System.out.println(sequenceAlignment.getP().toString());
 
             writeOutput(MemoryEfficientAlignment.OUTPUT_FILE, output.toString());
         } catch(FileNotFoundException exc) {

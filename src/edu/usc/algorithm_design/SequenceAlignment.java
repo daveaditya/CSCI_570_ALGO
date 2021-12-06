@@ -1,7 +1,10 @@
 package edu.usc.algorithm_design;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @SuppressWarnings("FieldMayBeFinal")
 public class SequenceAlignment {
@@ -72,18 +75,18 @@ public class SequenceAlignment {
         int n = Y.length();
 
         int[][] B = new int[m + 1][2];
-        for (int i = 1; i < m; i++) {
+        for (int i = 0; i <= m; i++) {
             B[i][0] = i * SequenceAlignment.GAP_PENALTY;
         }
-
-        if(X.length() == 0 || Y.length() == 0) {
-            return B;
-        }
+//
+//        if(X.length() == 0 || Y.length() == 0) {
+//            return B;
+//        }
 
         // Find cost for X and Y
         for (int j = 1; j < n; j++) {
             B[0][1] = j * SequenceAlignment.GAP_PENALTY;
-            for (int i = 1; i < m; i++) {
+            for (int i = 1; i <= m; i++) {
                 B[i][1] = Math.min(
                         Math.min(
                                 SequenceAlignment.MISMATCH_COST[ALPHABETS.indexOf(X.charAt(i))][ALPHABETS.indexOf(Y.charAt(j))] + B[i - 1][0], SequenceAlignment.GAP_PENALTY + B[i - 1][1]
@@ -91,7 +94,7 @@ public class SequenceAlignment {
             }
 
             // Swap the columns, to be ready for next iteration
-            for (int i = 1; i < m; i++) {
+            for (int i = 0; i <= m; i++) {
                 B[i][0] = B[i][1];
             }
         }
@@ -105,8 +108,8 @@ public class SequenceAlignment {
         int n = Y.length();
 
         int[][] B = new int[m + 1][2];
-        for (int i = m - 1; i >= 0; i--) {
-            B[i][0] = (m - i) * SequenceAlignment.GAP_PENALTY;
+        for (int i = m; i >= 0; i--) {
+            B[i][1] = (m - i) * SequenceAlignment.GAP_PENALTY;
         }
 
         if(X.length() == 0 || Y.length() == 0) {
@@ -114,7 +117,7 @@ public class SequenceAlignment {
         }
 
         for (int j = n - 1; j >= 0; j--) {
-            B[m - 1][0] = (n - j) * SequenceAlignment.GAP_PENALTY;
+            B[m][0] = (n - j) * SequenceAlignment.GAP_PENALTY;
 
             for (int i = m - 1; i >= 0; i--) {
                 B[i][0] = Math.min(
@@ -124,7 +127,7 @@ public class SequenceAlignment {
             }
 
             // Swap the columns to prepare for next iteration
-            for (int i = 0; i < m; i++) {
+            for (int i = 0; i <= m; i++) {
                 B[i][1] = B[i][0];
             }
         }
@@ -147,10 +150,10 @@ public class SequenceAlignment {
         if (m <= 2 || n <= 2) {
             this.alignment(X, Y);
         }
-
-        if(X.length() == 0 || Y.length() == 0) {
-            return;
-        }
+//
+//        if(X.length() == 0 || Y.length() == 0) {
+//            return;
+//        }
 
         int[][] left = spaceEfficientAlignment(X, Y.substring(0, n / 2));
         int[][] right = backwardSpaceEfficientAlignment(X, Y.substring(n / 2, n));
@@ -167,14 +170,13 @@ public class SequenceAlignment {
         boolean alreadyAdded = true;
         for(Pair pair : P) {
             if(pair.getX() == best_q && pair.getY() == n / 2) {
-                alreadyAdded = !alreadyAdded;
+                alreadyAdded = false;
                 break;
             }
         }
         if(alreadyAdded) {
             P.add(new Pair(best_q, n / 2, left[best_q][1]));
         }
-
         divideAndConquerAlignment(X.substring(0, best_q), Y.substring(0, n / 2));
         divideAndConquerAlignment(X.substring(best_q, m), Y.substring(n / 2, n));
     }
@@ -241,71 +243,59 @@ public class SequenceAlignment {
     }
 
 
-//    public String[] getAlignmentDC(String x, String y) {
-//        int maxLength = x.length() + y.length();
-//
-//        int i = x.length();
-//        int j = y.length();
-//
-//        int xPosition = maxLength;
-//        int yPosition = maxLength;
-//
-//        char[] xResult = new char[maxLength + 1];
-//        char[] yResult = new char[maxLength + 1];
-//
-//        List<Integer> P = new ArrayList<>(this.P);
-//        Collections.reverse(P);
-//
-//        while ( !(i == 0 || j == 0)) {
-//            if (x.charAt(i - 1) == y.charAt(j - 1)) {
-//                xResult[xPosition--] = x.charAt(i - 1);
-//                yResult[yPosition--] = y.charAt(j - 1);
-//                i--;
-//                j--;
-//            }
-//            else if (dp[i - 1][j - 1] + SequenceAlignment.MISMATCH_COST[ALPHABETS.indexOf(x.charAt(i-1))][ALPHABETS.indexOf(y.charAt(j-1))] == dp[i][j]) {
-//                xResult[xPosition--] = x.charAt(i - 1);
-//                yResult[yPosition--] = y.charAt(j - 1);
-//                i--;
-//                j--;
-//            }
-//            else if (dp[i - 1][j] + SequenceAlignment.GAP_PENALTY == dp[i][j]) {
-//                xResult[xPosition--] = x.charAt(i - 1);
-//                yResult[yPosition--] = '_';
-//                i--;
-//            }
-//            else if (dp[i][j - 1] + SequenceAlignment.GAP_PENALTY == dp[i][j]) {
-//                xResult[xPosition--] = '_';
-//                yResult[yPosition--] = y.charAt(j - 1);
-//                j--;
-//            }
-//        }
-//        while (xPosition > 0) {
-//            if (i > 0) xResult[xPosition--] = x.charAt(--i);
-//            else xResult[xPosition--] = (int)'_';
-//        }
-//        while (yPosition > 0) {
-//            if (j > 0) yResult[yPosition--] = y.charAt(--j);
-//            else yResult[yPosition--] = (int)'_';
-//        }
-//
-//        // Todo: To remove extra gaps or not? Refer Geeksforgeeks
-//        int id = 1;
-//        for (i = maxLength; i >= 1; i--) {
-//            if (yResult[i] == '_' && xResult[i] == '_') {
-//                id = i + 1;
-//                break;
-//            }
-//        }
-////        for (i = id; i <= maxLength; i++) {
-////            System.out.print(xResult[i]);
-////        }
-////        System.out.print("\n");
-////        for (i = id; i <= maxLength; i++)
-////        {
-////            System.out.print(yResult[i]);
-////        }
-//        return new String[]{new String(xResult), new String(yResult)};
-//    }
+    public String[] getAlignmentDC(String X, String Y) {
+
+        // Sort the P list based on X locations
+        List<Pair> P = this.P.stream().sorted(Comparator.comparingInt(Pair::getX)).collect(Collectors.toList());
+        System.out.println("sorted pair seq. :: " + P);
+
+        int previousX = -1, previousY=-1;
+        for (int i = 0; i < P.size() ; i++) {
+            if (previousY > P.get(i).getY()){
+                Collections.swap(P, i-1, i);
+            }
+            previousY = this.P.get(i).getY();
+        }
+
+        System.out.println("Prev Y :: " + previousY);
+        System.out.println("P :: " + P);
+
+        // Print sequence X
+        StringBuilder resultX = new StringBuilder();
+        for (Pair pair : P) {
+            if (pair.getX() < 0 || pair.getX() == previousX) {
+                resultX.append("_");
+            } else {
+                resultX.append(X.charAt(pair.getX()));
+            }
+            previousX = pair.getX();
+        }
+
+        // Print middle line
+        previousX = -1;
+        previousY = -1;
+        for(Pair pair : P) {
+            if(X.charAt(pair.getX()) == Y.charAt(pair.getY()) && previousX != pair.getX() && previousY != pair.getY()) {
+                System.out.print("|");
+            } else {
+                System.out.print(" ");
+            }
+            previousX = pair.getX();
+            previousY = pair.getY();
+        }
+
+        // Print sequence Y
+        previousY = -1;
+        StringBuilder resultY = new StringBuilder();
+        for (Pair pair : P) {
+            if (pair.getY() < 0 || pair.getY() == previousY){
+                resultX.append("_");
+            }else {
+                resultX.append(Y.charAt(pair.getX()));
+            }
+            previousY = pair.getY();
+        }
+        return new String[]{new String(resultX), new String(resultY)};
+    }
 
 }
