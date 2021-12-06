@@ -1,8 +1,6 @@
 package edu.usc.algorithm_design;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 public class SequenceAlignment {
@@ -68,35 +66,46 @@ public class SequenceAlignment {
         int m = X.length();
         int n = Y.length();
 
-        String xFlip= null, yFlip= null;
-        StringBuilder str = new StringBuilder();
-        str.append(X);
-        xFlip = String.valueOf(str.reverse());
-
-        StringBuilder str1 = new StringBuilder();
-        str1.append(Y);
-        yFlip = String.valueOf(str1.reverse());
+//        String xFlip= null, yFlip= null;
+//        StringBuilder str = new StringBuilder();
+//        str.append(X);
+//        xFlip = String.valueOf(str.reverse());
+//
+//        StringBuilder str1 = new StringBuilder();
+//        str1.append(Y);
+//        yFlip = String.valueOf(str1.reverse());
 
         if(m <= 2 || n <= 2){
             this.alignment(X,Y);
         }
 
-        int[] left = spaceEfficientAlignment(X, Y.substring(0, n/2));
-        int[] right = spaceEfficientAlignment(xFlip, yFlip.substring(0, n/2));
+        int[][] left = spaceEfficientAlignment(X, Y.substring(0, n/2));
+        int[][] right = backwardSpaceEfficientAlignment_new(X, Y.substring(n/2+1, n));
+//        int[] right = spaceEfficientAlignment(xFlip, yFlip.substring(0, n/2));
 
-        int best_cost = Integer.MAX_VALUE;
-        int best_q = -1;
-        for (int q = 0; q < n ; q++) {
-            int cost = left[q] + right[q+1];
-            if(cost < best_cost) {
-                best_cost = cost;
-                best_q = q;
+
+        int min = left[1][1] + right[1][0];
+        int best_q = 1;
+        for (int q = 2; q < m ; q++) {
+            if (min > left[q][1] + right[q][0]){
+                min = left[q][1] + right[q][0];
+                best_q = q - 1;
             }
         }
+//        int best_cost = Integer.MAX_VALUE;
+//        int best_q = m;
+//        for (int q = 0; q < n ; q++) {
+//            int cost = left[q] + right[q+1];
+//            if(cost < best_cost) {
+//                best_cost = cost;
+//                best_q = q;
+//            }
+//        }
 
-        //int q =0;
+//        System.out.println("Best cost :: " + best_cost);
+        System.out.println("Best q :: " + best_q);
         P.add(new Pair(best_q, n/2));
-        divideAndConquerAlignment(X.substring(1,best_q), Y.substring(1, n/2));
+        divideAndConquerAlignment(X.substring(0,best_q), Y.substring(0, n/2));
         divideAndConquerAlignment(X.substring(best_q+1,n), Y.substring(n/2 + 1, n));
     }
 
@@ -172,7 +181,7 @@ public class SequenceAlignment {
      * @param Y
      * @return
      */
-    public int[] spaceEfficientAlignment(String X, String Y) {
+    public int[][] spaceEfficientAlignment(String X, String Y) {
         int m = X.length();
         int n = Y.length();
 
@@ -186,6 +195,35 @@ public class SequenceAlignment {
             for (int i = 1; i < m; i++) {
                 B[i][1] = Math.min(Math.min(SequenceAlignment.MISMATCH_COST[ALPHABETS.indexOf(X.charAt(i - 1))][ALPHABETS.indexOf(Y.charAt(j - 1))] + B[i - 1][0],
                         SequenceAlignment.GAP_PENALTY + B[i - 1][1]), SequenceAlignment.GAP_PENALTY + B[i][0]);
+            }
+            for (int i = 1; i < m; i++) {
+                B[i][0] = B[i][1];
+            }
+        }
+
+        return B;
+
+//        int[] R = new int[m];
+//        for (int i = 0; i < m; i++) {
+//            R[i] = B[i][1];
+//        }
+//        return R;
+    }
+
+    public int[] backwardSpaceEfficientAlignment(String X, String Y) {
+        int m = X.length();
+        int n = Y.length();
+
+        int[][] B = new int[m+1][2];
+        for (int j =1; j < m ; j++){
+            B[j][0] = j * SequenceAlignment.GAP_PENALTY;
+        }
+
+        for (int j = 1; j < n; j++) {
+            B[0][1] = j * SequenceAlignment.GAP_PENALTY;
+            for (int i = 1; i < m; i++) {
+                B[i][1] = Math.min(Math.min(SequenceAlignment.MISMATCH_COST[ALPHABETS.indexOf(X.charAt(i - 1))][ALPHABETS.indexOf(Y.charAt(j -1))] + B[i + 1][j + 1],
+                        SequenceAlignment.GAP_PENALTY + B[i][j+1]), SequenceAlignment.GAP_PENALTY + B[i+1][j]);
             }
             for (int i = 1; i < m; i++) {
                 B[i][0] = B[i][1];
@@ -199,26 +237,30 @@ public class SequenceAlignment {
         return R;
     }
 
-    public void backwardSpaceEfficientAlignment(String X, String Y) {
+
+    public int[][] backwardSpaceEfficientAlignment_new(String X, String Y) {
         int m = X.length();
         int n = Y.length();
 
         int[][] B = new int[m][2];
-        for (int j =1; j < m ; j++){
-            B[j][0] = j * SequenceAlignment.GAP_PENALTY;
+        for (int j = m-1 ; j >= 0 ; j--){
+            B[j][0] = (m-j) * SequenceAlignment.GAP_PENALTY;
         }
 
-        for (int j = 1; j < n; j++) {
-            B[0][1] = j * SequenceAlignment.GAP_PENALTY;
-            for (int i = 1; i < m; i++) {
-                B[i][1] = Math.min(Math.min(SequenceAlignment.MISMATCH_COST[ALPHABETS.indexOf(X.charAt(i - 1))][ALPHABETS.indexOf(Y.charAt(j - 1))] + B[i - 1][0],
-                        SequenceAlignment.GAP_PENALTY + B[i - 1][1]), SequenceAlignment.GAP_PENALTY + B[i][0]);
+        for (int j = n-1; j >=0; j--) {
+            B[m-1][1] = (n-j) * SequenceAlignment.GAP_PENALTY;
+            System.out.println("X :: " + X);
+            System.out.println("Y :: " + Y);
+            for (int i = n-1; i >= 0; i--) {
+                B[i][1] = Math.min(Math.min(SequenceAlignment.MISMATCH_COST[ALPHABETS.indexOf(X.charAt(i))][ALPHABETS.indexOf(Y.charAt(j))] + B[i + 1][1],
+                        SequenceAlignment.GAP_PENALTY + B[i][1]), SequenceAlignment.GAP_PENALTY + B[i+1][0]);
             }
             for (int i = 1; i < m; i++) {
                 B[i][0] = B[i][1];
             }
         }
 
+        return B;
 //        int[] R = new int[m];
 //        for (int i = 0; i < m; i++) {
 //            R[i] = B[i][1];
