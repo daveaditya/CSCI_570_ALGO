@@ -43,6 +43,7 @@ public class BasicAlignment {
 
             // memory required for alignment cost and print operations displayed in file
             double memoryUsed = memoryConsumption();
+
             // write to the output.txt file
             GeneratedOutput output = new GeneratedOutput(formatAlignment(firstAlignment), formatAlignment(secondAlignment), alignmentCost, elapsedTime, memoryUsed);
             writeOutput(Constants.OUTPUT_FILE, output.toString());
@@ -55,6 +56,9 @@ public class BasicAlignment {
         String outputAlignment = null;
         if(alignmentStr.length() > 50){
             outputAlignment = alignmentStr.substring(0,50) + " " + alignmentStr.substring(alignmentStr.length() - 50);
+        }else {
+            // not required... can be removed
+            outputAlignment = alignmentStr.substring(0, alignmentStr.length());
         }
             return outputAlignment;
     }
@@ -77,7 +81,6 @@ public class BasicAlignment {
             }
         }
         for (int i = id; i <= maxLength; i++) {
-            System.out.print(xResult[i]);
             stringBuffer.append(xResult[i]);
         }
         return String.valueOf(stringBuffer);
@@ -102,7 +105,6 @@ public class BasicAlignment {
         }
         System.out.print("\n");
         for (int i = id; i <= maxLength; i++) {
-            System.out.print(yResult[i]);
             stringBuffer.append(yResult[i]);
         }
         return String.valueOf(stringBuffer);
@@ -115,18 +117,6 @@ public class BasicAlignment {
      * @param noOfSecondBaseIndices No of indices from the input file for the second base string
      */
     private static boolean validateInput(String firstBase, int noOfFirstBaseIndices, String secondBase, int noOfSecondBaseIndices) {
-        // j and k validation TODO: change later
-        if (firstBase.length() == (2 ^ noOfFirstBaseIndices) * firstBase.length()) {
-            System.out.println("Valid j");
-        } else {
-            System.out.println("Invalid j");
-        }
-        if (secondBase.length() == (2 ^ noOfSecondBaseIndices) * secondBase.length()) {
-            System.out.println("Valid k");
-        } else {
-            System.out.println("Invalid k");
-        }
-
         return (
                 firstBase.length() != (2 ^ noOfFirstBaseIndices) * firstBase.length() ||
                         secondBase.length() != (2 ^ noOfSecondBaseIndices) * secondBase.length()
@@ -143,18 +133,14 @@ public class BasicAlignment {
         Scanner sc = new Scanner(new File(fileLocation));
 
         String firstBase = sc.nextLine();
-        System.out.println("First Base string = " + firstBase);
         while (sc.hasNextInt()) {
             firstBaseIndices.add(sc.nextInt());
         }
-        System.out.println("Indices for first base = " + firstBaseIndices);
 
         String secondBase = sc.next();
-        System.out.println("Second Base string = " + secondBase);
         while (sc.hasNextInt()) {
             secondBaseIndices.add(sc.nextInt());
         }
-        System.out.println("Indices for second base = " + secondBaseIndices);
 
         // validation for j and k that can be reused in the algo.
         if(!validateInput(firstBase, firstBaseIndices.size(), secondBase, secondBaseIndices.size())) {
