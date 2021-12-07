@@ -44,11 +44,19 @@ public class BasicAlignment {
             // memory required for alignment cost and print operations displayed in file
             double memoryUsed = memoryConsumption();
             // write to the output.txt file
-            GeneratedOutput output = new GeneratedOutput(firstAlignment, secondAlignment, alignmentCost, elapsedTime, memoryUsed);
+            GeneratedOutput output = new GeneratedOutput(formatAlignment(firstAlignment), formatAlignment(secondAlignment), alignmentCost, elapsedTime, memoryUsed);
             writeOutput(Constants.OUTPUT_FILE, output.toString());
         } catch(FileNotFoundException exc) {
             System.out.println("The input file `" + inputFileLocation + "` does not exists. Please try again!");
         }
+    }
+
+    public static String formatAlignment(String alignmentStr) {
+        String outputAlignment = null;
+        if(alignmentStr.length() > 50){
+            outputAlignment = alignmentStr.substring(0,50) + " " + alignmentStr.substring(alignmentStr.length() - 50);
+        }
+            return outputAlignment;
     }
 
     /**
