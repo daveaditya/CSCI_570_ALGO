@@ -1,4 +1,7 @@
-package edu.usc.algorithm_design;
+package main.java.usc.project.impl;
+
+import main.java.usc.project.beans.Pair;
+import main.java.usc.project.constants.Constants;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -9,22 +12,11 @@ import java.util.stream.Collectors;
 @SuppressWarnings("FieldMayBeFinal")
 public class SequenceAlignment {
 
-    private static final int GAP_PENALTY = 30;
-    private static final int[][] MISMATCH_COST = {
-            {0, 110, 48, 94},
-            {110, 0, 118, 48},
-            {48, 118, 0, 110},
-            {94, 48, 110, 0}
-    };
-    private static final String ALPHABETS = "ACGT";
     private int[][] dp;
     private List<Pair> P;
-
-
     public List<Pair> getP() {
         return this.P;
     }
-
 
     public SequenceAlignment(String X, String Y) {
         this.dp = new int[X.length() + 1][Y.length() + 1];
@@ -37,18 +29,18 @@ public class SequenceAlignment {
         int n = Y.length();
 
         for (int i = 0; i <= m; i++) {
-            this.dp[i][0] = i * SequenceAlignment.GAP_PENALTY;
+            this.dp[i][0] = i * Constants.GAP_PENALTY;
         }
         for (int j = 0; j <= n; j++) {
-            this.dp[0][j] = j * SequenceAlignment.GAP_PENALTY;
+            this.dp[0][j] = j * Constants.GAP_PENALTY;
         }
 
         for (int i = 1; i <= m; i++) {
             for (int j = 1; j <= n; j++) {
                 this.dp[i][j] = Math.min(
                         Math.min(
-                                SequenceAlignment.GAP_PENALTY + this.dp[i - 1][j], SequenceAlignment.GAP_PENALTY + this.dp[i][j - 1]
-                        ), SequenceAlignment.MISMATCH_COST[ALPHABETS.indexOf(X.charAt(i - 1))][ALPHABETS.indexOf(Y.charAt(j - 1))] + this.dp[i - 1][j - 1]);
+                                Constants.GAP_PENALTY + this.dp[i - 1][j], Constants.GAP_PENALTY + this.dp[i][j - 1]
+                        ), Constants.MISMATCH_COST[Constants.ALPHABETS.indexOf(X.charAt(i - 1))][Constants.ALPHABETS.indexOf(Y.charAt(j - 1))] + this.dp[i - 1][j - 1]);
             }
         }
         return dp[m][n];
@@ -66,7 +58,7 @@ public class SequenceAlignment {
 
         int[][] B = new int[m + 1][2];
         for (int i = 0; i <= m; i++) {
-            B[i][0] = i * SequenceAlignment.GAP_PENALTY;
+            B[i][0] = i * Constants.GAP_PENALTY;
         }
 //
 //        if(X.length() == 0 || Y.length() == 0) {
@@ -75,12 +67,12 @@ public class SequenceAlignment {
 
         // Find cost for X and Y
         for (int j = 1; j < n; j++) {
-            B[0][1] = j * SequenceAlignment.GAP_PENALTY;
+            B[0][1] = j * Constants.GAP_PENALTY;
             for (int i = 1; i <= m; i++) {
                 B[i][1] = Math.min(
                         Math.min(
-                                SequenceAlignment.MISMATCH_COST[ALPHABETS.indexOf(X.charAt(i))][ALPHABETS.indexOf(Y.charAt(j))] + B[i - 1][0], SequenceAlignment.GAP_PENALTY + B[i - 1][1]
-                        ), SequenceAlignment.GAP_PENALTY + B[i][0]);
+                                Constants.MISMATCH_COST[Constants.ALPHABETS.indexOf(X.charAt(i))][Constants.ALPHABETS.indexOf(Y.charAt(j))] + B[i - 1][0], Constants.GAP_PENALTY + B[i - 1][1]
+                        ), Constants.GAP_PENALTY + B[i][0]);
             }
 
             // Swap the columns, to be ready for next iteration
@@ -99,7 +91,7 @@ public class SequenceAlignment {
 
         int[][] B = new int[m + 1][2];
         for (int i = m; i >= 0; i--) {
-            B[i][1] = (m - i) * SequenceAlignment.GAP_PENALTY;
+            B[i][1] = (m - i) * Constants.GAP_PENALTY;
         }
 
         if(X.length() == 0 || Y.length() == 0) {
@@ -107,13 +99,13 @@ public class SequenceAlignment {
         }
 
         for (int j = n - 1; j >= 0; j--) {
-            B[m][0] = (n - j) * SequenceAlignment.GAP_PENALTY;
+            B[m][0] = (n - j) * Constants.GAP_PENALTY;
 
             for (int i = m - 1; i >= 0; i--) {
                 B[i][0] = Math.min(
                         Math.min(
-                                SequenceAlignment.MISMATCH_COST[ALPHABETS.indexOf(X.charAt(i))][ALPHABETS.indexOf(Y.charAt(j))] + B[i + 1][1], SequenceAlignment.GAP_PENALTY + B[i + 1][0]
-                        ), SequenceAlignment.GAP_PENALTY + B[i][1]);
+                                Constants.MISMATCH_COST[Constants.ALPHABETS.indexOf(X.charAt(i))][Constants.ALPHABETS.indexOf(Y.charAt(j))] + B[i + 1][1], Constants.GAP_PENALTY + B[i + 1][0]
+                        ), Constants.GAP_PENALTY + B[i][1]);
             }
 
             // Swap the columns to prepare for next iteration
@@ -190,16 +182,16 @@ public class SequenceAlignment {
                 yResult[yPosition--] = y.charAt(j - 1);
                 i--;
                 j--;
-            } else if (this.dp[i - 1][j - 1] + SequenceAlignment.MISMATCH_COST[ALPHABETS.indexOf(x.charAt(i - 1))][ALPHABETS.indexOf(y.charAt(j - 1))] == this.dp[i][j]) {
+            } else if (this.dp[i - 1][j - 1] + Constants.MISMATCH_COST[Constants.ALPHABETS.indexOf(x.charAt(i - 1))][Constants.ALPHABETS.indexOf(y.charAt(j - 1))] == this.dp[i][j]) {
                 xResult[xPosition--] = x.charAt(i - 1);
                 yResult[yPosition--] = y.charAt(j - 1);
                 i--;
                 j--;
-            } else if (this.dp[i][j - 1] + SequenceAlignment.GAP_PENALTY == this.dp[i][j]) {
+            } else if (this.dp[i][j - 1] + Constants.GAP_PENALTY == this.dp[i][j]) {
                 xResult[xPosition--] = '_';
                 yResult[yPosition--] = y.charAt(j - 1);
                 j--;
-            } else if (this.dp[i - 1][j] + SequenceAlignment.GAP_PENALTY == this.dp[i][j]) {
+            } else if (this.dp[i - 1][j] + Constants.GAP_PENALTY == this.dp[i][j]) {
                 xResult[xPosition--] = x.charAt(i - 1);
                 yResult[yPosition--] = '_';
                 i--;

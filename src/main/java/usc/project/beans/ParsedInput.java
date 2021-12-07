@@ -1,15 +1,12 @@
-package edu.usc.algorithm_design;
+package main.java.usc.project.beans;
 
 import java.util.List;
 
 public class ParsedInput {
 
     String firstBase;
-
     String secondBase;
-
     List<Integer> firstBaseIndices;
-
     List<Integer> secondBaseIndices;
 
     public ParsedInput(String firstBase, List<Integer> firstBaseIndices, String secondBase, List<Integer> secondBaseIndices) {

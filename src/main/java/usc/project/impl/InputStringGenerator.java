@@ -1,15 +1,10 @@
-package edu.usc.algorithm_design;
+package main.java.usc.project.impl;
 
 import java.util.List;
 
-
-/**
- *  B. Input String Generator
- */
 public class InputStringGenerator {
 
     /**
-     *
      * @param inputBase
      * @param indices
      */
@@ -34,7 +29,6 @@ public class InputStringGenerator {
             }
 
         }
-
         return output.toString();
     }
 

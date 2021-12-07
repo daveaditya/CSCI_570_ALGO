@@ -1,4 +1,4 @@
-package edu.usc.algorithm_design;
+package main.java.usc.project.beans;
 
 
 public class GeneratedOutput {
