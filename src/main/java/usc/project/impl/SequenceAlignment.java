@@ -138,9 +138,9 @@ public class SequenceAlignment {
 //        }
 
         int[][] left = spaceEfficientAlignment(X, Y.substring(0, n / 2));
-        int[][] right = backwardSpaceEfficientAlignment(X, Y.substring(n / 2, n));
+        int[][] right = spaceEfficientAlignment(new StringBuilder(X).reverse().toString(), new StringBuilder(Y).reverse().substring(n / 2, n));
 
-        int min = left[1][1] + right[1][0];
+        int min = left[0][1] + right[0][0];
         int best_q = 1;
         for (int q = 2; q <= m; q++) {
             if (min > left[q][1] + right[q][0]) {
@@ -159,6 +159,11 @@ public class SequenceAlignment {
         if(alreadyAdded) {
             P.add(new Pair(best_q, n / 2, left[best_q][1]));
         }
+
+        if(X.length() == 0 || Y.length() == 0) {
+            return;
+        }
+
         divideAndConquerAlignment(X.substring(0, best_q), Y.substring(0, n / 2));
         divideAndConquerAlignment(X.substring(best_q, m), Y.substring(n / 2, n));
     }

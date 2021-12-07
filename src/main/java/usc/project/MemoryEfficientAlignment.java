@@ -40,6 +40,7 @@ public class MemoryEfficientAlignment {
             SequenceAlignment sequenceAlignment = new SequenceAlignment(firstGeneratedBase, secondGeneratedBase);
             sequenceAlignment.divideAndConquerAlignment(firstGeneratedBase, secondGeneratedBase);
             String[] result = sequenceAlignment.getAlignmentDC(firstGeneratedBase,secondGeneratedBase);
+            System.out.println("Length :: " + sequenceAlignment.getP().size());
             System.out.println("Final alignment 1:: " + result[0]);
             System.out.println("final al 1 :: " + result[1]);
 
