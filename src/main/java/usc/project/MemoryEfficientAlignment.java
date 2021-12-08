@@ -5,6 +5,8 @@ import main.java.usc.project.impl.SequenceAlignment;
 import main.java.usc.project.beans.GeneratedOutput;
 import main.java.usc.project.beans.ParsedInput;
 import main.java.usc.project.constants.Constants;
+import main.java.usc.project.impl.SequenceAlignmentDC;
+//import main.java.usc.project.impl.SequenceAlignmentDC;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -26,26 +28,17 @@ public class MemoryEfficientAlignment {
         try {
             ParsedInput input = parseInputFile(inputFileLocation);
 
-            System.out.println("Output: \n" + input);
-
             // Generate strings for input to the sequence alignment from the input
             String firstGeneratedBase = InputStringGenerator.run(input.getFirstBase(), input.getFirstBaseIndices());
             String secondGeneratedBase = InputStringGenerator.run(input.getSecondBase(), input.getSecondBaseIndices());
 
-            System.out.println("First Base :: " + firstGeneratedBase);
-            System.out.println("Second Base :: " + secondGeneratedBase);
+
+            SequenceAlignmentDC sequenceAlignment = new SequenceAlignmentDC(firstGeneratedBase, secondGeneratedBase);
+            sequenceAlignment.divideAndConquerAlignment_Lecture(firstGeneratedBase, secondGeneratedBase);
+            //String[] result = sequenceAlignment.getAlignmentDC(firstGeneratedBase,secondGeneratedBase);
+
 
             GeneratedOutput output = new GeneratedOutput(null, null, 0,0, 0.0);
-
-            SequenceAlignment sequenceAlignment = new SequenceAlignment(firstGeneratedBase, secondGeneratedBase);
-            sequenceAlignment.divideAndConquerAlignment(firstGeneratedBase, secondGeneratedBase);
-            String[] result = sequenceAlignment.getAlignmentDC(firstGeneratedBase,secondGeneratedBase);
-            System.out.println("Final alignment 1:: " + result[0]);
-            System.out.println("final al 1 :: " + result[1]);
-
-            System.out.println(result[0].length());
-            System.out.println(result[1].length());
-
             writeOutput(Constants.OUTPUT_FILE, output.toString());
         } catch(FileNotFoundException exc) {
             System.out.println("The input file `" + inputFileLocation + "` does not exists. Please try again!");
@@ -59,18 +52,6 @@ public class MemoryEfficientAlignment {
      * @param noOfSecondBaseIndices No of indices from the input file for the second base string
      */
     private static boolean validateInput(String firstBase, int noOfFirstBaseIndices, String secondBase, int noOfSecondBaseIndices) {
-        // j and k validation TODO: change later
-        if (firstBase.length() == (2 ^ noOfFirstBaseIndices) * firstBase.length()) {
-            System.out.println("Valid j");
-        } else {
-            System.out.println("Invalid j");
-        }
-        if (secondBase.length() == (2 ^ noOfSecondBaseIndices) * secondBase.length()) {
-            System.out.println("Valid k");
-        } else {
-            System.out.println("Invalid k");
-        }
-
         return (
                 firstBase.length() != (2 ^ noOfFirstBaseIndices) * firstBase.length() ||
                         secondBase.length() != (2 ^ noOfSecondBaseIndices) * secondBase.length()
@@ -88,18 +69,14 @@ public class MemoryEfficientAlignment {
         Scanner sc = new Scanner(new File(fileLocation));
 
         String firstBase = sc.nextLine();
-        System.out.println("First Base string = " + firstBase);
         while (sc.hasNextInt()) {
             firstBaseIndices.add(sc.nextInt());
         }
-        System.out.println("Indices for first base = " + firstBaseIndices);
 
         String secondBase = sc.next();
-        System.out.println("Second Base string = " + secondBase);
         while (sc.hasNextInt()) {
             secondBaseIndices.add(sc.nextInt());
         }
-        System.out.println("Indices for second base = " + secondBaseIndices);
 
         // validation for j and k that can be reused in the algo.
         if(!validateInput(firstBase, firstBaseIndices.size(), secondBase, secondBaseIndices.size())) {
