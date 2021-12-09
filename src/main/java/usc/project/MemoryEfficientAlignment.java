@@ -33,9 +33,6 @@ public class MemoryEfficientAlignment {
             String firstGeneratedBase = InputStringGenerator.run(input.getFirstBase(), input.getFirstBaseIndices());
             String secondGeneratedBase = InputStringGenerator.run(input.getSecondBase(), input.getSecondBaseIndices());
 
-            System.out.println("First :: " + firstGeneratedBase);
-            System.out.println("Second :: " + secondGeneratedBase);
-
             Timer timer = new Timer();
             timer.start();
 
@@ -43,7 +40,6 @@ public class MemoryEfficientAlignment {
 
             // Run basic version of sequence alignment
             AlignmentOutput alignmentOutput = sequenceAlignment.alignmentWithDivideAndConquer(firstGeneratedBase, secondGeneratedBase);
-            System.out.println("Total :: " + sequenceAlignment.total);
 
             timer.end();
 
@@ -55,8 +51,6 @@ public class MemoryEfficientAlignment {
                     (timer.duration()) / 1000.0,
                     Utilities.bytesToKilobytes(timer.memory())
             );
-
-            System.out.println(output);
 
             Utilities.writeOutput(Constants.OUTPUT_FILE, output.toString());
         } catch(FileNotFoundException exc) {
