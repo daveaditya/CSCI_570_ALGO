@@ -12,8 +12,8 @@ sns.set_style("whitegrid")
 
 def plot(df: pd.DataFrame, output_location: str):
   figure = plt.figure(figsize=(10, 6))
-  sns.lineplot(x='length_of_input', y='time_basic', color="b", data=df)
-  sns.lineplot(x='length_of_input', y='time_memory_efficient', color="g", data=df)
+  sns.lineplot(x='length_of_input', y='time_basic', color="b", marker="o", data=df)
+  sns.lineplot(x='length_of_input', y='time_memory_efficient', marker="o", color="g", data=df)
   plt.title("Input Length vs Time", fontsize=15)
   plt.xlabel ("Length of Input")
   plt.ylabel ("Time (seconds)")
@@ -21,8 +21,8 @@ def plot(df: pd.DataFrame, output_location: str):
   plt.savefig(f"{output_location}/time_plot.jpeg")
 
   figure = plt.figure(figsize=(10, 6))
-  sns.lineplot(x='length_of_input', y='memory_basic', data=df, color="b")
-  sns.lineplot(x='length_of_input', y='memory_memory_efficient', data=df, color="g")
+  sns.lineplot(x='length_of_input', y='memory_basic', data=df, color="b", marker="o")
+  sns.lineplot(x='length_of_input', y='memory_memory_efficient', data=df, color="g", marker="o")
   plt.title("Input Length vs Memory", fontsize=15)
   plt.xlabel ("Length of Input")
   plt.ylabel ("Memory (kilobyte)")
