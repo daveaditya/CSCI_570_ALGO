@@ -33,13 +33,19 @@ public class MemoryEfficientAlignment {
             String firstGeneratedBase = InputStringGenerator.run(input.getFirstBase(), input.getFirstBaseIndices());
             String secondGeneratedBase = InputStringGenerator.run(input.getSecondBase(), input.getSecondBaseIndices());
 
+            System.out.println(firstGeneratedBase);
+            System.out.println(secondGeneratedBase);
+
             Timer timer = new Timer();
             timer.start();
 
             SequenceAlignment sequenceAlignment = new SequenceAlignment();
 
             // Run basic version of sequence alignment
-            AlignmentOutput alignmentOutput = sequenceAlignment.alignmentWithDivideAndConquer(firstGeneratedBase, secondGeneratedBase);
+            AlignmentOutput alignmentOutput = sequenceAlignment.alignmentWithDivideAndConquer(firstGeneratedBase, 0, secondGeneratedBase, 0);
+            System.out.println(alignmentOutput);
+            System.out.println(sequenceAlignment.P);
+            System.out.println(sequenceAlignment.P.size());
 
             timer.end();
 
