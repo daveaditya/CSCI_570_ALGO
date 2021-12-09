@@ -160,9 +160,8 @@ public class SequenceAlignment {
         int m = X.length;
         int n = Y.length;
 
-        if (m <= 1 || n <= 1) {
+        if (m <= 1 || n <= 1)
             return this.alignmentWithDynamicProgramming(X, Y);
-        }
 
         // Get left part of X
         char[] xLeft = new char[m / 2];
@@ -173,10 +172,14 @@ public class SequenceAlignment {
         System.arraycopy(X, m / 2, xRight, 0, m / 2);
 
         char[] xRightReversed = new char[m / 2];
-        System.arraycopy(xRight, m / 2 - 1, xRightReversed, 0, xRightReversed.length);
+        for (int i = 0; i < xRightReversed.length; i++) {
+            xRightReversed[i] = xRight[xRight.length - i - 1];
+        }
 
         char[] yReversed = new char[n];
-        System.arraycopy(Y, m / 2, yReversed, 0, n);
+        for (int i = 0; i < yReversed.length; i++) {
+            yReversed[i] = Y[n - i - 1];
+        }
 
         int[] left = spaceEfficientAlignment(xLeft, Y);
         int[] right = spaceEfficientAlignment(xRightReversed, yReversed);
@@ -194,17 +197,38 @@ public class SequenceAlignment {
 
         // Get left of Y
         char[] yLeft = new char[bestIndex];
-        System.arraycopy(Y, 0, yLeft, 0, m / 2);
+        System.arraycopy(Y, 0, yLeft, 0, bestIndex);
 
         // Get right of Y
         char[] yRight = new char[n - bestIndex];
-        System.arraycopy(Y, bestIndex, yRight, 0, n - m / 2);
+        System.arraycopy(Y, bestIndex, yRight, 0, n - bestIndex);
 
         AlignmentOutput leftOutput = alignmentWithDivideAndConquer(xLeft, yLeft);
         AlignmentOutput rightOutput = alignmentWithDivideAndConquer(xRight, yRight);
+
+        char[] leftOutputFirstAlignment = leftOutput.getFirstAlignment();
+        char[] rightOutputFirstAlignment = rightOutput.getFirstAlignment();
+        char[] firstAlignmentResult = new char[leftOutputFirstAlignment.length + rightOutputFirstAlignment.length];
+        for (int i = 0; i < leftOutputFirstAlignment.length; i++) {
+            firstAlignmentResult[i] = leftOutputFirstAlignment[i];
+        }
+        for (int i = leftOutputFirstAlignment.length, j = 0; i < firstAlignmentResult.length && j < rightOutputFirstAlignment.length; i++, j++) {
+            firstAlignmentResult[i] = rightOutputFirstAlignment[j];
+        }
+
+        char[] leftOutputSecondAlignment = leftOutput.getSecondAlignment();
+        char[] rightOutputSecondAlignment = rightOutput.getSecondAlignment();
+        char[] secondAlignmentResult = new char[leftOutputSecondAlignment.length + rightOutputSecondAlignment.length];
+        for (int i = 0; i < leftOutputFirstAlignment.length; i++) {
+            secondAlignmentResult[i] = leftOutputFirstAlignment[i];
+        }
+        for (int i = leftOutputFirstAlignment.length, j = 0; i < firstAlignmentResult.length && j < rightOutputFirstAlignment.length; i++, j++) {
+            secondAlignmentResult[i] = rightOutputSecondAlignment[j];
+        }
+
         return new AlignmentOutput(
-                (new String(leftOutput.getFirstAlignment()) + new String(rightOutput.getFirstAlignment())).toCharArray(),
-                (new String(rightOutput.getFirstAlignment()) + new String(rightOutput.getSecondAlignment())).toCharArray(),
+                firstAlignmentResult,
+                secondAlignmentResult,
                 leftOutput.getCost() + rightOutput.getCost()
         );
     }

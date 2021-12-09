@@ -10,9 +10,6 @@ import main.java.usc.project.utils.Timer;
 import main.java.usc.project.utils.Utilities;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
 
 public class MemoryEfficientAlignment {
 
@@ -38,22 +35,22 @@ public class MemoryEfficientAlignment {
 
             SequenceAlignment sequenceAlignment = new SequenceAlignment();
 
-            // Run basic version of sequence alignment
-//            AlignmentOutput alignmentOutput = sequenceAlignment.alignmentWithDivideAndConquer(firstGeneratedBase, secondGeneratedBase);
-//            System.out.println(alignmentOutput);
+            // Run divide and conquer version of sequence alignment
+            AlignmentOutput alignmentOutput = sequenceAlignment.alignmentWithDivideAndConquer(firstGeneratedBase, secondGeneratedBase);
+            System.out.println(alignmentOutput);
 
             timer.end();
 
             // write to the output.txt file
-//            GeneratedOutput output = new GeneratedOutput(
-//                    Utilities.formatAlignment(alignmentOutput.getFirstAlignment()),
-//                    Utilities.formatAlignment(alignmentOutput.getSecondAlignment()),
-//                    alignmentOutput.getCost(),
-//                    (timer.duration()) / 1000.0,
-//                    Utilities.bytesToKilobytes(timer.memory())
-//            );
-//
-//            Utilities.writeOutput(Constants.OUTPUT_FILE, output.toString());
+            GeneratedOutput output = new GeneratedOutput(
+                    Utilities.formatAlignment(alignmentOutput.getFirstAlignment()),
+                    Utilities.formatAlignment(alignmentOutput.getSecondAlignment()),
+                    alignmentOutput.getCost(),
+                    (timer.duration()) / 1000.0,
+                    Utilities.bytesToKilobytes(timer.memory())
+            );
+
+            Utilities.writeOutput(Constants.OUTPUT_FILE, output.toString());
         } catch(FileNotFoundException exc) {
             System.out.println("The input file `" + inputFileLocation + "` does not exists. Please try again!");
         }
