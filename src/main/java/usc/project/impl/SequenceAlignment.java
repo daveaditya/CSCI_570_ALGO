@@ -202,8 +202,6 @@ public class SequenceAlignment {
         System.out.println("Y Reversed :: " + yReversed);
 
 
-
-
         int[] left = spaceEfficientAlignment(xLeft, Y);
         int[] right = spaceEfficientAlignment(xRReversed, yReversed);
 
@@ -233,7 +231,7 @@ public class SequenceAlignment {
         AlignmentOutput rightOutput = alignmentWithDivideAndConquer(xRight, yRight);
         return new AlignmentOutput(
                 leftOutput.getFirstAlignment() + rightOutput.getFirstAlignment(),
-                rightOutput.getFirstAlignment() + rightOutput.getSecondAlignment(),
+                leftOutput.getSecondAlignment() + rightOutput.getSecondAlignment(),
                 leftOutput.getCost() + rightOutput.getCost()
         );
     }
