@@ -2,7 +2,7 @@ package main.java.usc.project.constants;
 
 public interface Constants {
 
-    String OUTPUT_FILE = "./output1.txt";
+    String OUTPUT_FILE = "./output.txt";
     long KILOBYTE = 1024L;
 
     int GAP_PENALTY = 30;

@@ -18,7 +18,7 @@ def plot(df: pd.DataFrame, output_location: str):
   plt.xlabel ("Length of Input")
   plt.ylabel ("Time (seconds)")
   plt.legend(handles=[ Line2D([], [], color="blue", label="Basic Version") ,Line2D([], [], color="green", label="Memory Efficient Version")])
-  plt.savefig(f"{output_location}/time_plot.jpeg")
+  plt.savefig(f"{output_location}/CPUPlot.png")
 
   figure = plt.figure(figsize=(10, 6))
   sns.lineplot(x='length_of_input', y='memory_basic', data=df, color="b", marker="o")
@@ -27,7 +27,7 @@ def plot(df: pd.DataFrame, output_location: str):
   plt.xlabel ("Length of Input")
   plt.ylabel ("Memory (kilobyte)")
   plt.legend(handles=[ Line2D([], [], color="blue", label="Basic Version") ,Line2D([], [], color="green", label="Memory Efficient Version")])
-  plt.savefig(f"{output_location}/memory_plot.jpeg")
+  plt.savefig(f"{output_location}/MemoryPlot.png")
 
 
 def main(input_location: str, output_location: str, output_directory: str):
