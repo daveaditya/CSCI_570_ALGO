@@ -6,6 +6,7 @@ import main.java.usc.project.beans.GeneratedOutput;
 import main.java.usc.project.beans.ParsedInput;
 import main.java.usc.project.constants.Constants;
 import main.java.usc.project.impl.SequenceAlignment;
+import main.java.usc.project.utils.Timer;
 import main.java.usc.project.utils.Utilities;
 
 import java.io.*;
@@ -31,26 +32,28 @@ public class MemoryEfficientAlignment {
             // Generate strings for input to the sequence alignment from the input
             String firstGeneratedBase = InputStringGenerator.run(input.getFirstBase(), input.getFirstBaseIndices());
             String secondGeneratedBase = InputStringGenerator.run(input.getSecondBase(), input.getSecondBaseIndices());
-            SequenceAlignment sequenceAlignment = new SequenceAlignment();
 
-            Runtime.getRuntime().gc();
-            long memoryBeforeSequenceAlignment = Runtime.getRuntime().freeMemory();
-            long startTime = System.currentTimeMillis();
+            System.out.println("First :: " + firstGeneratedBase);
+            System.out.println("Second :: " + secondGeneratedBase);
+
+            Timer timer = new Timer();
+            timer.start();
+
+            SequenceAlignment sequenceAlignment = new SequenceAlignment();
 
             // Run basic version of sequence alignment
             AlignmentOutput alignmentOutput = sequenceAlignment.alignmentWithDivideAndConquer(firstGeneratedBase, secondGeneratedBase);
+            System.out.println("Total :: " + sequenceAlignment.total);
 
-            long stopTime = System.currentTimeMillis();
-            Runtime.getRuntime().gc();
-            long memoryUsedAfterSequenceAlignment = Runtime.getRuntime().freeMemory();
+            timer.end();
 
             // write to the output.txt file
             GeneratedOutput output = new GeneratedOutput(
                     Utilities.formatAlignment(alignmentOutput.getFirstAlignment()),
                     Utilities.formatAlignment(alignmentOutput.getSecondAlignment()),
                     alignmentOutput.getCost(),
-                    ((double) stopTime - (double) startTime) / 1000.0,
-                    Utilities.bytesToKilobytes(memoryUsedAfterSequenceAlignment - memoryBeforeSequenceAlignment)
+                    (timer.duration()) / 1000.0,
+                    Utilities.bytesToKilobytes(timer.memory())
             );
 
             System.out.println(output);

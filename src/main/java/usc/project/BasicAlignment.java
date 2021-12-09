@@ -6,6 +6,7 @@ import main.java.usc.project.impl.SequenceAlignment;
 import main.java.usc.project.beans.GeneratedOutput;
 import main.java.usc.project.beans.ParsedInput;
 import main.java.usc.project.constants.Constants;
+import main.java.usc.project.utils.Timer;
 import main.java.usc.project.utils.Utilities;
 
 import java.io.*;
@@ -32,27 +33,24 @@ public class BasicAlignment {
             // Generate strings for input to the sequence alignment from the input
             String firstGeneratedBase = InputStringGenerator.run(input.getFirstBase(), input.getFirstBaseIndices());
             String secondGeneratedBase = InputStringGenerator.run(input.getSecondBase(), input.getSecondBaseIndices());
-            SequenceAlignment sequenceAlignment = new SequenceAlignment();
 
-            Runtime.getRuntime().gc();
-            long memoryUsedBeforeSequenceAlignment = Runtime.getRuntime().freeMemory();
-            long startTime = System.currentTimeMillis();
+            Timer timer = new Timer();
+
+            SequenceAlignment sequenceAlignment = new SequenceAlignment();
 
             // Run basic version of sequence alignment
             AlignmentOutput alignmentOutput = sequenceAlignment.alignmentWithDynamicProgramming(firstGeneratedBase, secondGeneratedBase);
 
 
-            long stopTime = System.currentTimeMillis();
-            Runtime.getRuntime().gc();
-            long memoryUsedAfterSequenceAlignment = Runtime.getRuntime().freeMemory();
+            timer.end();
 
             // write to the output.txt file
             GeneratedOutput output = new GeneratedOutput(
                     Utilities.formatAlignment(alignmentOutput.getFirstAlignment()),
                     Utilities.formatAlignment(alignmentOutput.getSecondAlignment()),
                     alignmentOutput.getCost(),
-                    ((double) stopTime - (double) startTime) / 1000.0,
-                    Utilities.bytesToKilobytes(memoryUsedAfterSequenceAlignment - memoryUsedBeforeSequenceAlignment)
+                    (timer.duration() / 1000.0),
+                    Utilities.bytesToKilobytes(timer.memory())
             );
 
             Utilities.writeOutput(Constants.OUTPUT_FILE, output.toString());

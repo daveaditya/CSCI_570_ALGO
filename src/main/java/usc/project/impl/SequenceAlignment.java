@@ -8,6 +8,8 @@ import java.util.stream.IntStream;
 @SuppressWarnings("FieldMayBeFinal")
 public class SequenceAlignment {
 
+    public int total = 0;
+
     public SequenceAlignment() {
     }
 
@@ -87,32 +89,90 @@ public class SequenceAlignment {
     }
 
 
+//    public int[] spaceEfficientAlignment(String X, String Y) {
+//        int m = X.length();
+//        int n = Y.length();
+//
+//        int[][] B = new int[2][n + 1];
+//        for (int i = 0; i <= n; i++) {
+//            B[0][i] = i * Constants.GAP_PENALTY;
+//        }
+//
+//        // Find cost for X and Y
+//        for (int i = 1; i <= m; i++) {
+//            B[1][0] = i * Constants.GAP_PENALTY;
+//
+//            for (int j = 1; j <= n; j++) {
+//                B[1][j] = Math.min(
+//                        Math.min(
+//                                Constants.MISMATCH_COST[Constants.ALPHABETS.indexOf(X.charAt(i - 1))][Constants.ALPHABETS.indexOf(Y.charAt(j - 1))] + B[0][j - 1],
+//                                Constants.GAP_PENALTY + B[0][j]
+//                        ), Constants.GAP_PENALTY + B[1][j - 1]);
+//            }
+//
+//            // Swap the columns, to be ready for next iteration
+//            for (int k = 0; k <= n; k++) {
+//                B[0][i] = B[1][i];
+//            }
+//        }
+//
+//        int[] result = new int[n + 1];
+//        for (int i = 0; i <= n; i++) {
+//            result[i] = B[1][i];
+//        }
+//
+//        return result;
+//
+////        return IntStream.range(0, n + 1).map(row -> B[row][0]).toArray();
+//    }
+
+
     public int[] spaceEfficientAlignment(String X, String Y) {
         int m = X.length();
         int n = Y.length();
 
-        int[][] B = new int[m + 1][2];
-        for (int i = 0; i <= m; i++) {
-            B[i][0] = i * Constants.GAP_PENALTY;
+        int[] prev = new int[n + 1];
+        int[] curr = new int[n + 1];
+
+        for (int i = 0; i <= n; i++) {
+            prev[i] = 0;
+            curr[i] = 0;
+        }
+
+        for (int i = 0; i <= n; i++) {
+            prev[i] = i * Constants.GAP_PENALTY;
         }
 
         // Find cost for X and Y
-        for (int j = 1; j <= n; j++) {
-            B[0][1] = j * Constants.GAP_PENALTY;
-            for (int i = 1; i <= m; i++) {
-                B[i][1] = Math.min(
-                        Math.min(
-                                Constants.MISMATCH_COST[Constants.ALPHABETS.indexOf(X.charAt(i - 1))][Constants.ALPHABETS.indexOf(Y.charAt(j - 1))] + B[i - 1][0], Constants.GAP_PENALTY + B[i - 1][1]
-                        ), Constants.GAP_PENALTY + B[i][0]);
+        for (int i = 1; i <= m; i++) {
+            curr[0] = i * Constants.GAP_PENALTY;
+
+            for (int j = 1; j <= n; j++) {
+                if(X.charAt(i - 1) == Y.charAt(j - 1)) {
+                    curr[j] = prev[j - 1];
+                } else {
+                    curr[j] = Math.min(
+                            Math.min(
+                                    Constants.MISMATCH_COST[Constants.ALPHABETS.indexOf(X.charAt(i - 1))][Constants.ALPHABETS.indexOf(Y.charAt(j - 1))] + prev[j - 1],
+                                    Constants.GAP_PENALTY + prev[j]
+                            ), Constants.GAP_PENALTY + curr[j - 1]);
+                }
             }
 
-            // Swap the columns, to be ready for next iteration
-            for (int i = 0; i <= m; i++) {
-                B[i][0] = B[i][1];
+            for (int j = 0; j <= n; j++) {
+                prev[j] = curr[j];
+                curr[j] = 0;
             }
         }
 
-        return IntStream.range(0, m + 1).map(row -> B[row][0]).toArray();
+        for (int i = 0; i <= n; i++) {
+            System.out.print(prev[i] + " ");
+        }
+        System.out.println();
+
+        return prev;
+
+//        return IntStream.range(0, n + 1).map(row -> B[row][0]).toArray();
     }
 
 
@@ -120,28 +180,51 @@ public class SequenceAlignment {
         int m = X.length();
         int n = Y.length();
 
-        if (m <= 2 || n <= 2) {
-            return this.alignmentWithDynamicProgramming(X, Y);
+        if (m <= 1 || n <= 1) {
+            AlignmentOutput result = this.alignmentWithDynamicProgramming(X, Y);
+            System.out.println(X + " " + Y);
+            System.out.println(result.getFirstAlignment() + " " + result.getSecondAlignment());
+            System.out.println(result.getCost());
+            this.total += result.getCost();
+            return result;
         }
 
         String xLeft = X.substring(0, m / 2);
         String xRight = X.substring(m / 2);
 
-        int[] left = spaceEfficientAlignment(xLeft, Y);
-        int[] right = spaceEfficientAlignment(
-                new StringBuilder(xRight).reverse().toString(),
-                new StringBuilder(Y).reverse().toString()
-        );
+        System.out.println("X :: " + X);
+        System.out.println("xLeft :: " + xLeft);
+        System.out.println("xRight :: " + xRight);
 
-        int bestCost = Integer.MAX_VALUE;
+        String xRReversed = new StringBuilder(xRight).reverse().toString();
+        String yReversed = new StringBuilder(Y).reverse().toString();
+        System.out.println("Xr Reversed :: " + xRReversed);
+        System.out.println("Y Reversed :: " + yReversed);
+
+
+
+
+        int[] left = spaceEfficientAlignment(xLeft, Y);
+        int[] right = spaceEfficientAlignment(xRReversed, yReversed);
+
+        int bestCost = left[0] + right[n];
         int bestIndex = 0;
-        for (int q = 0, r = right.length - 1; q < left.length && r >= 0; q++, r--) {
-            System.out.println(left[q] + right[r]);
-            if (left[q] + right[r] < bestCost) {
-                bestCost = left[q] + right[r];
+//        for (int q = 0, r = right.length - 1; q < left.length && r >= 0; q++, r--) {
+//            System.out.printf("%-8d%-8d\n", left[q], right[r]);
+//            if (left[q] + right[r] < bestCost) {
+//                bestCost = left[q] + right[r];
+//                bestIndex = q;
+//            }
+//        }
+        for (int q = 0; q <= n; q++) {
+            int cost = left[q] + right[n - q];
+            if (cost < bestCost) {
+                bestCost = cost;
                 bestIndex = q;
             }
         }
+
+        System.out.printf("%-8d%-8d%-8d\n", m / 2, bestIndex, bestCost);
 
         String yLeft = Y.substring(0, bestIndex);
         String yRight = Y.substring(bestIndex);
