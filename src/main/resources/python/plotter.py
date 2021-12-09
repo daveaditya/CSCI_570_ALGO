@@ -78,7 +78,7 @@ def main(input_location: str, output_location: str, output_directory: str):
         if index == len(lines_in_basic_file):
           break
 
-      mn_values.append(math.pow(2, lines_for_first_base_string) * length_of_first_base_string * math.pow(2, lines_for_second_base_string) * length_of_second_base_string)
+      mn_values.append(math.pow(2, lines_for_first_base_string) + length_of_first_base_string * math.pow(2, lines_for_second_base_string) * length_of_second_base_string)
     # Completed calculating mn values for all input files
 
   # Create list of time in seconds

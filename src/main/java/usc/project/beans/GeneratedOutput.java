@@ -5,11 +5,11 @@ public class GeneratedOutput {
 
     String firstAlignment;
     String secondAlignment;
-    float alignmentCost;
+    double alignmentCost;
     double timeTaken;
     double memoryUsed;
 
-    public GeneratedOutput(String firstAlignment, String secondAlignment, float alignmentCost, double timeTaken, double memoryUsed) {
+    public GeneratedOutput(String firstAlignment, String secondAlignment, double alignmentCost, double timeTaken, double memoryUsed) {
         this.firstAlignment = firstAlignment;
         this.secondAlignment = secondAlignment;
         this.alignmentCost = alignmentCost;
@@ -49,7 +49,7 @@ public class GeneratedOutput {
         this.memoryUsed = memoryUsed;
     }
 
-    public float getAlignmentCost() {
+    public double getAlignmentCost() {
         return alignmentCost;
     }
 
