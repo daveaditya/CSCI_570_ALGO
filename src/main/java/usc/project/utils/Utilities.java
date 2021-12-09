@@ -5,18 +5,19 @@ import main.java.usc.project.constants.Constants;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 
 public class Utilities {
 
-    public static String formatAlignment(String alignmentStr) {
+    public static String formatAlignment(char[] alignmentStr) {
         String outputAlignment;
-        if(alignmentStr.length() > 50){
-            outputAlignment = alignmentStr.substring(0, 50) + " " + alignmentStr.substring(alignmentStr.length() - 50);
+        if(alignmentStr.length > 50){
+            outputAlignment = Arrays.toString(alignmentStr).substring(0, 50) + " " + Arrays.toString(alignmentStr).substring(alignmentStr.length - 50);
         } else {
             // not required... can be removed
-            outputAlignment = alignmentStr + " " + alignmentStr;
+            outputAlignment = Arrays.toString(alignmentStr) + " " + Arrays.toString(alignmentStr);
         }
         return outputAlignment;
     }

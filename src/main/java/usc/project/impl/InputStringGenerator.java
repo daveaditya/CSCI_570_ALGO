@@ -4,11 +4,7 @@ import java.util.List;
 
 public class InputStringGenerator {
 
-    /**
-     * @param inputBase
-     * @param indices
-     */
-    public static String run(String inputBase, List<Integer> indices){
+    public static char[] run(String inputBase, List<Integer> indices){
         StringBuilder output = new StringBuilder(inputBase);
         String appendString = output.toString();
 
@@ -22,6 +18,6 @@ public class InputStringGenerator {
                 appendString = String.valueOf(output);
             }
         }
-        return output.toString();
+        return output.toString().toCharArray();
     }
 }

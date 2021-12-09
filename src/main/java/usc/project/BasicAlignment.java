@@ -10,9 +10,6 @@ import main.java.usc.project.utils.Timer;
 import main.java.usc.project.utils.Utilities;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
 
 public class BasicAlignment {
 
@@ -31,8 +28,8 @@ public class BasicAlignment {
             ParsedInput input = Utilities.parseInputFile(inputFileLocation);
 
             // Generate strings for input to the sequence alignment from the input
-            String firstGeneratedBase = InputStringGenerator.run(input.getFirstBase(), input.getFirstBaseIndices());
-            String secondGeneratedBase = InputStringGenerator.run(input.getSecondBase(), input.getSecondBaseIndices());
+            char[] firstGeneratedBase = InputStringGenerator.run(input.getFirstBase(), input.getFirstBaseIndices());
+            char[] secondGeneratedBase = InputStringGenerator.run(input.getSecondBase(), input.getSecondBaseIndices());
 
             Timer timer = new Timer();
 
@@ -40,7 +37,7 @@ public class BasicAlignment {
 
             // Run basic version of sequence alignment
             AlignmentOutput alignmentOutput = sequenceAlignment.alignmentWithDynamicProgramming(firstGeneratedBase, secondGeneratedBase);
-
+            System.out.println(alignmentOutput);
 
             timer.end();
 

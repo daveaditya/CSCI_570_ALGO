@@ -3,41 +3,59 @@ package main.java.usc.project.impl;
 import main.java.usc.project.beans.AlignmentOutput;
 import main.java.usc.project.constants.Constants;
 
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.stream.IntStream;
 
-@SuppressWarnings("FieldMayBeFinal")
+@SuppressWarnings({"FieldMayBeFinal", "ManualArrayCopy"})
 public class SequenceAlignment {
 
-    public int total = 0;
+    public static final int GAP_PENALTY = 30;
+    public static final int[][] MISMATCH_COST = {
+            {0, 110, 48, 94},
+            {110, 0, 118, 48},
+            {48, 118, 0, 110},
+            {94, 48, 110, 0}
+    };
+
+    public static final Map<Character, Integer> ALPHABETS = new HashMap<>();
+
 
     public SequenceAlignment() {
+        ALPHABETS.put('A', 0);
+        ALPHABETS.put('C', 1);
+        ALPHABETS.put('G', 2);
+        ALPHABETS.put('T', 3);
     }
 
 
-    public AlignmentOutput alignmentWithDynamicProgramming(String X, String Y) {
-        int m = X.length();
-        int n = Y.length();
+    public AlignmentOutput alignmentWithDynamicProgramming(char[] X, char[] Y) {
+        int m = X.length;
+        int n = Y.length;
 
         int[][] dp = new int[m + 1][n + 1];
-        for (int i = 0; i <= m; i++) {
-            dp[i][0] = i * Constants.GAP_PENALTY;
-        }
-        for (int j = 0; j <= n; j++) {
-            dp[0][j] = j * Constants.GAP_PENALTY;
-        }
+        for (int i = 0; i <= m; i++)
+            dp[i][0] = i * GAP_PENALTY;
+
+        for (int j = 0; j <= n; j++)
+            dp[0][j] = j * GAP_PENALTY;
 
         for (int i = 1; i <= m; i++) {
             for (int j = 1; j <= n; j++) {
                 dp[i][j] = Math.min(
-                        Math.min(
-                                Constants.GAP_PENALTY + dp[i - 1][j], Constants.GAP_PENALTY + dp[i][j - 1]
-                        ), Constants.MISMATCH_COST[Constants.ALPHABETS.indexOf(X.charAt(i - 1))][Constants.ALPHABETS.indexOf(Y.charAt(j - 1))] + dp[i - 1][j - 1]);
+                                MISMATCH_COST[ALPHABETS.get(X[i - 1])][ALPHABETS.get(Y[j - 1])] + dp[i - 1][j - 1],
+                                Math.min(
+                                    GAP_PENALTY + dp[i - 1][j],
+                                    GAP_PENALTY + dp[i][j - 1]
+                                )
+                        );
             }
         }
 
-        int maxLength = X.length() + Y.length();
-        int i = X.length();
-        int j = Y.length();
+        int maxLength = m + n;
+        int i = m;
+        int j = n;
 
         int xPosition = maxLength;
         int yPosition = maxLength;
@@ -46,35 +64,39 @@ public class SequenceAlignment {
         char[] yResult = new char[maxLength + 1];
 
         while (!(i == 0 || j == 0)) {
-            if (X.charAt(i - 1) == Y.charAt(j - 1)) {
-                xResult[xPosition--] = X.charAt(i - 1);
-                yResult[yPosition--] = Y.charAt(j - 1);
+            if (X[i - 1] == Y[j - 1]) {
+                xResult[xPosition--] = X[i - 1];
+                yResult[yPosition--] = Y[j - 1];
                 i--;
                 j--;
-            } else if (dp[i - 1][j - 1] + Constants.MISMATCH_COST[Constants.ALPHABETS.indexOf(X.charAt(i - 1))][Constants.ALPHABETS.indexOf(Y.charAt(j - 1))] == dp[i][j]) {
-                xResult[xPosition--] = X.charAt(i - 1);
-                yResult[yPosition--] = Y.charAt(j - 1);
+            } else if (dp[i - 1][j - 1] + MISMATCH_COST[ALPHABETS.get(X[i - 1])][ALPHABETS.get(Y[j - 1])] == dp[i][j]) {
+                xResult[xPosition--] = X[i - 1];
+                yResult[yPosition--] = Y[j - 1];
                 i--;
                 j--;
-            } else if (dp[i][j - 1] + Constants.GAP_PENALTY == dp[i][j]) {
+            } else if (dp[i][j - 1] + GAP_PENALTY == dp[i][j]) {
                 xResult[xPosition--] = '_';
-                yResult[yPosition--] = Y.charAt(j - 1);
+                yResult[yPosition--] = Y[j - 1];
                 j--;
-            } else if (dp[i - 1][j] + Constants.GAP_PENALTY == dp[i][j]) {
-                xResult[xPosition--] = X.charAt(i - 1);
+            } else if (dp[i - 1][j] + GAP_PENALTY == dp[i][j]) {
+                xResult[xPosition--] = X[i - 1];
                 yResult[yPosition--] = '_';
                 i--;
             }
         }
 
         while (xPosition > 0) {
-            if (i > 0) xResult[xPosition--] = X.charAt(--i);
-            else xResult[xPosition--] = (int) '_';
+            if (i > 0)
+                xResult[xPosition--] = X[--i];
+            else
+                xResult[xPosition--] = '_';
         }
 
         while (yPosition > 0) {
-            if (j > 0) yResult[yPosition--] = Y.charAt(--j);
-            else yResult[yPosition--] = (int) '_';
+            if (j > 0)
+                yResult[yPosition--] = Y[--j];
+            else
+                yResult[yPosition--] = '_';
         }
 
         int id = 1;
@@ -85,137 +107,83 @@ public class SequenceAlignment {
             }
         }
 
-        return new AlignmentOutput(new String(xResult).substring(id), new String(yResult).substring(id), dp[m][n]);
+        // Create X Result
+        char[] finalXResult = new char[xResult.length - id];
+        for(int p = 0 ; p < yResult.length - id; p++)
+            finalXResult[p] = xResult[id + p];
+
+        // Create Y Result
+        char[] finalYResult = new char[yResult.length - id];
+        for(int p = 0 ; p < yResult.length - id; p++)
+            finalYResult[p] = yResult[id + p];
+
+        return new AlignmentOutput(finalXResult, finalYResult, dp[m][n]);
     }
 
 
-//    public int[] spaceEfficientAlignment(String X, String Y) {
-//        int m = X.length();
-//        int n = Y.length();
-//
-//        int[][] B = new int[2][n + 1];
-//        for (int i = 0; i <= n; i++) {
-//            B[0][i] = i * Constants.GAP_PENALTY;
-//        }
-//
-//        // Find cost for X and Y
-//        for (int i = 1; i <= m; i++) {
-//            B[1][0] = i * Constants.GAP_PENALTY;
-//
-//            for (int j = 1; j <= n; j++) {
-//                B[1][j] = Math.min(
-//                        Math.min(
-//                                Constants.MISMATCH_COST[Constants.ALPHABETS.indexOf(X.charAt(i - 1))][Constants.ALPHABETS.indexOf(Y.charAt(j - 1))] + B[0][j - 1],
-//                                Constants.GAP_PENALTY + B[0][j]
-//                        ), Constants.GAP_PENALTY + B[1][j - 1]);
-//            }
-//
-//            // Swap the columns, to be ready for next iteration
-//            for (int k = 0; k <= n; k++) {
-//                B[0][i] = B[1][i];
-//            }
-//        }
-//
-//        int[] result = new int[n + 1];
-//        for (int i = 0; i <= n; i++) {
-//            result[i] = B[1][i];
-//        }
-//
-//        return result;
-//
-////        return IntStream.range(0, n + 1).map(row -> B[row][0]).toArray();
-//    }
+    public int[] spaceEfficientAlignment(char[] X, char[] Y) {
+        int m = X.length;
+        int n = Y.length;
 
-
-    public int[] spaceEfficientAlignment(String X, String Y) {
-        int m = X.length();
-        int n = Y.length();
-
-        int[] prev = new int[n + 1];
-        int[] curr = new int[n + 1];
-
+        int[][] B = new int[2][n + 1];
         for (int i = 0; i <= n; i++) {
-            prev[i] = 0;
-            curr[i] = 0;
-        }
-
-        for (int i = 0; i <= n; i++) {
-            prev[i] = i * Constants.GAP_PENALTY;
+            B[0][i] = i * GAP_PENALTY;
         }
 
         // Find cost for X and Y
         for (int i = 1; i <= m; i++) {
-            curr[0] = i * Constants.GAP_PENALTY;
+            B[1][0] = i * GAP_PENALTY;
 
             for (int j = 1; j <= n; j++) {
-                if(X.charAt(i - 1) == Y.charAt(j - 1)) {
-                    curr[j] = prev[j - 1];
-                } else {
-                    curr[j] = Math.min(
-                            Math.min(
-                                    Constants.MISMATCH_COST[Constants.ALPHABETS.indexOf(X.charAt(i - 1))][Constants.ALPHABETS.indexOf(Y.charAt(j - 1))] + prev[j - 1],
-                                    Constants.GAP_PENALTY + prev[j]
-                            ), Constants.GAP_PENALTY + curr[j - 1]);
-                }
+                B[1][j] = Math.min(
+                        Math.min(
+                                MISMATCH_COST[ALPHABETS.get(X[i - 1])][ALPHABETS.get(Y[j - 1])] + B[0][j - 1],
+                                GAP_PENALTY + B[0][j]
+                        ), GAP_PENALTY + B[1][j - 1]);
             }
 
-            for (int j = 0; j <= n; j++) {
-                prev[j] = curr[j];
-                curr[j] = 0;
+            // Swap the columns, to be ready for next iteration
+            for (int k = 0; k <= n; k++) {
+                B[0][i] = B[1][i];
             }
         }
 
-        for (int i = 0; i <= n; i++) {
-            System.out.print(prev[i] + " ");
-        }
-        System.out.println();
+        int[] result = new int[n + 1];
+        for (int i = 0; i <= n; i++)
+            result[i] = B[1][i];
 
-        return prev;
-
-//        return IntStream.range(0, n + 1).map(row -> B[row][0]).toArray();
+        return result;
     }
 
 
-    public AlignmentOutput alignmentWithDivideAndConquer(String X, String Y) {
-        int m = X.length();
-        int n = Y.length();
+    public AlignmentOutput alignmentWithDivideAndConquer(char[] X, char[] Y) {
+        int m = X.length;
+        int n = Y.length;
 
         if (m <= 1 || n <= 1) {
-            AlignmentOutput result = this.alignmentWithDynamicProgramming(X, Y);
-            System.out.println(X + " " + Y);
-            System.out.println(result.getFirstAlignment() + " " + result.getSecondAlignment());
-            System.out.println(result.getCost());
-            this.total += result.getCost();
-            return result;
+            return this.alignmentWithDynamicProgramming(X, Y);
         }
 
-        String xLeft = X.substring(0, m / 2);
-        String xRight = X.substring(m / 2);
+        // Get left part of X
+        char[] xLeft = new char[m / 2];
+        System.arraycopy(X, 0, xLeft, 0, m / 2);
 
-        System.out.println("X :: " + X);
-        System.out.println("xLeft :: " + xLeft);
-        System.out.println("xRight :: " + xRight);
+        // Get right part of Y
+        char[] xRight = new char[m / 2];
+        System.arraycopy(X, m / 2, xRight, 0, m / 2);
 
-        String xRReversed = new StringBuilder(xRight).reverse().toString();
-        String yReversed = new StringBuilder(Y).reverse().toString();
-        System.out.println("Xr Reversed :: " + xRReversed);
-        System.out.println("Y Reversed :: " + yReversed);
+        char[] xRightReversed = new char[m / 2];
+        System.arraycopy(xRight, m / 2 - 1, xRightReversed, 0, xRightReversed.length);
 
-
-
+        char[] yReversed = new char[n];
+        System.arraycopy(Y, m / 2, yReversed, 0, n);
 
         int[] left = spaceEfficientAlignment(xLeft, Y);
-        int[] right = spaceEfficientAlignment(xRReversed, yReversed);
+        int[] right = spaceEfficientAlignment(xRightReversed, yReversed);
 
         int bestCost = left[0] + right[n];
         int bestIndex = 0;
-//        for (int q = 0, r = right.length - 1; q < left.length && r >= 0; q++, r--) {
-//            System.out.printf("%-8d%-8d\n", left[q], right[r]);
-//            if (left[q] + right[r] < bestCost) {
-//                bestCost = left[q] + right[r];
-//                bestIndex = q;
-//            }
-//        }
+
         for (int q = 0; q <= n; q++) {
             int cost = left[q] + right[n - q];
             if (cost < bestCost) {
@@ -224,16 +192,19 @@ public class SequenceAlignment {
             }
         }
 
-        System.out.printf("%-8d%-8d%-8d\n", m / 2, bestIndex, bestCost);
+        // Get left of Y
+        char[] yLeft = new char[bestIndex];
+        System.arraycopy(Y, 0, yLeft, 0, m / 2);
 
-        String yLeft = Y.substring(0, bestIndex);
-        String yRight = Y.substring(bestIndex);
+        // Get right of Y
+        char[] yRight = new char[n - bestIndex];
+        System.arraycopy(Y, bestIndex, yRight, 0, n - m / 2);
 
         AlignmentOutput leftOutput = alignmentWithDivideAndConquer(xLeft, yLeft);
         AlignmentOutput rightOutput = alignmentWithDivideAndConquer(xRight, yRight);
         return new AlignmentOutput(
-                leftOutput.getFirstAlignment() + rightOutput.getFirstAlignment(),
-                rightOutput.getFirstAlignment() + rightOutput.getSecondAlignment(),
+                (new String(leftOutput.getFirstAlignment()) + new String(rightOutput.getFirstAlignment())).toCharArray(),
+                (new String(rightOutput.getFirstAlignment()) + new String(rightOutput.getSecondAlignment())).toCharArray(),
                 leftOutput.getCost() + rightOutput.getCost()
         );
     }

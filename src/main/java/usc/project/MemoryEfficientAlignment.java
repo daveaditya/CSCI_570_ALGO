@@ -30,11 +30,8 @@ public class MemoryEfficientAlignment {
             ParsedInput input = Utilities.parseInputFile(inputFileLocation);
 
             // Generate strings for input to the sequence alignment from the input
-            String firstGeneratedBase = InputStringGenerator.run(input.getFirstBase(), input.getFirstBaseIndices());
-            String secondGeneratedBase = InputStringGenerator.run(input.getSecondBase(), input.getSecondBaseIndices());
-
-            System.out.println(firstGeneratedBase);
-            System.out.println(secondGeneratedBase);
+            char[] firstGeneratedBase = InputStringGenerator.run(input.getFirstBase(), input.getFirstBaseIndices());
+            char[] secondGeneratedBase = InputStringGenerator.run(input.getSecondBase(), input.getSecondBaseIndices());
 
             Timer timer = new Timer();
             timer.start();
@@ -42,23 +39,21 @@ public class MemoryEfficientAlignment {
             SequenceAlignment sequenceAlignment = new SequenceAlignment();
 
             // Run basic version of sequence alignment
-            AlignmentOutput alignmentOutput = sequenceAlignment.alignmentWithDivideAndConquer(firstGeneratedBase, 0, secondGeneratedBase, 0);
-            System.out.println(alignmentOutput);
-            System.out.println(sequenceAlignment.P);
-            System.out.println(sequenceAlignment.P.size());
+//            AlignmentOutput alignmentOutput = sequenceAlignment.alignmentWithDivideAndConquer(firstGeneratedBase, secondGeneratedBase);
+//            System.out.println(alignmentOutput);
 
             timer.end();
 
             // write to the output.txt file
-            GeneratedOutput output = new GeneratedOutput(
-                    Utilities.formatAlignment(alignmentOutput.getFirstAlignment()),
-                    Utilities.formatAlignment(alignmentOutput.getSecondAlignment()),
-                    alignmentOutput.getCost(),
-                    (timer.duration()) / 1000.0,
-                    Utilities.bytesToKilobytes(timer.memory())
-            );
-
-            Utilities.writeOutput(Constants.OUTPUT_FILE, output.toString());
+//            GeneratedOutput output = new GeneratedOutput(
+//                    Utilities.formatAlignment(alignmentOutput.getFirstAlignment()),
+//                    Utilities.formatAlignment(alignmentOutput.getSecondAlignment()),
+//                    alignmentOutput.getCost(),
+//                    (timer.duration()) / 1000.0,
+//                    Utilities.bytesToKilobytes(timer.memory())
+//            );
+//
+//            Utilities.writeOutput(Constants.OUTPUT_FILE, output.toString());
         } catch(FileNotFoundException exc) {
             System.out.println("The input file `" + inputFileLocation + "` does not exists. Please try again!");
         }

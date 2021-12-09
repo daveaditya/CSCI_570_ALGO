@@ -1,17 +1,11 @@
 package main.java.usc.project.constants;
 
-public interface Constants {
+import java.util.HashMap;
+import java.util.Map;
 
-    String OUTPUT_FILE = "./output1.txt";
-    long KILOBYTE = 1024L;
+public class Constants {
 
-    int GAP_PENALTY = 30;
-    int[][] MISMATCH_COST = {
-            {0, 110, 48, 94},
-            {110, 0, 118, 48},
-            {48, 118, 0, 110},
-            {94, 48, 110, 0}
-    };
-    String ALPHABETS = "ACGT";
+    public static final String OUTPUT_FILE = "./output1.txt";
+    public static final long KILOBYTE = 1024L;
 
 }
