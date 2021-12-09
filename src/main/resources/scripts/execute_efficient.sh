@@ -1,9 +1,7 @@
 #!/bin/sh
-echo "Please enter the input filename:"
-read filename
-
-if [ -f "$filename" ]; then
+filename="$1"
+if [ [ -e $filename ]]; then
     java -jar algo_project_efficient.jar $filename
 else
-    echo "$filename does not exist."
+    echo "Please provide a file."
 fi
