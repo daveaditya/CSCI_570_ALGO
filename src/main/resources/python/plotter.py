@@ -2,31 +2,32 @@ import math
 import argparse
 import os
 from os import path
-import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
+from matplotlib.lines import Line2D
 import seaborn as sns
+sns.set()
 
 sns.set_style("whitegrid")
 
 def plot(df: pd.DataFrame, output_location: str):
-  line,ax = plt.subplots(figsize=(10,6))
-  ax = sns.lineplot(x='length_of_input', y='time_basic', data=df)
-  ax = sns.lineplot(x='length_of_input', y='time_memory_efficient', data=df)
-  ax.set_title("Input Length vs Time", fontsize=15)
-  ax.set_xlabel ("Length of Input")
-  ax.set_ylabel ("Time (seconds)")
-  plt.legend(labels=["Basic Version","Memory Efficient Version"])
-  line.savefig(f"{output_location}/basic.jpeg")
+  figure = plt.figure(figsize=(10, 6))
+  sns.lineplot(x='length_of_input', y='time_basic', color="b", data=df)
+  sns.lineplot(x='length_of_input', y='time_memory_efficient', color="g", data=df)
+  plt.title("Input Length vs Time", fontsize=15)
+  plt.xlabel ("Length of Input")
+  plt.ylabel ("Time (seconds)")
+  plt.legend(handles=[ Line2D([], [], color="blue", label="Basic Version") ,Line2D([], [], color="green", label="Memory Efficient Version")])
+  plt.savefig(f"{output_location}/time_plot.jpeg")
 
-  line,ax = plt.subplots(figsize=(10,6))
-  ax = sns.lineplot(x='length_of_input', y='memory_basic', data=df)
-  ax = sns.lineplot(x='length_of_input', y='memory_memory_efficient', data=df)
-  ax.set_title("Input Length vs Memory", fontsize=15)
-  ax.set_xlabel ("Length of Input")
-  ax.set_ylabel ("Memory (kilobyte)")
-  plt.legend(labels=["Basic Version","Memory Efficient Version"])
-  line.savefig(f"{output_location}/memory_plot.jpeg")
+  figure = plt.figure(figsize=(10, 6))
+  sns.lineplot(x='length_of_input', y='memory_basic', data=df, color="b")
+  sns.lineplot(x='length_of_input', y='memory_memory_efficient', data=df, color="g")
+  plt.title("Input Length vs Memory", fontsize=15)
+  plt.xlabel ("Length of Input")
+  plt.ylabel ("Memory (kilobyte)")
+  plt.legend(handles=[ Line2D([], [], color="blue", label="Basic Version") ,Line2D([], [], color="green", label="Memory Efficient Version")])
+  plt.savefig(f"{output_location}/memory_plot.jpeg")
 
 
 def main(input_location: str, output_location: str, output_directory: str):
@@ -78,7 +79,7 @@ def main(input_location: str, output_location: str, output_directory: str):
         if index == len(lines_in_basic_file):
           break
 
-      mn_values.append(math.pow(2, lines_for_first_base_string) * length_of_first_base_string + math.pow(2, lines_for_second_base_string) * length_of_second_base_string)
+      mn_values.append(math.pow(2, lines_for_first_base_string) + length_of_first_base_string * math.pow(2, lines_for_second_base_string) * length_of_second_base_string)
     # Completed calculating mn values for all input files
 
   # Create list of time in seconds
