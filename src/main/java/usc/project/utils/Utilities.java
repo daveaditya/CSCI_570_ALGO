@@ -17,7 +17,7 @@ public class Utilities {
             outputAlignment = new String(alignmentStr).substring(0, 50) + " " + new String(alignmentStr).substring(alignmentStr.length - 50);
         } else {
             // not required... can be removed
-            outputAlignment = Arrays.toString(alignmentStr) + " " + Arrays.toString(alignmentStr);
+            outputAlignment = new String(alignmentStr) + " " + new String(alignmentStr);
         }
         return outputAlignment;
     }
