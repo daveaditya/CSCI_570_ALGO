@@ -1,0 +1,114 @@
+Summary.txt
+
+Comments on why the efficient and basic versions have different memory and time plots.
+
+Analysis based on CPU Time
+- The time taken by the basic version stays constant whereas the efficient version's time taken increases as the recursion stack size increases as we use a divide-and-conquer approach used in it.
+
+- At about 1500 input length, the time taken by both basic and memory-efficient versions is the same.
+
+- After approximately 2200 input length, the time taken by the basic version does not vary much and is less than the memory-efficient version, as in the latter we find an optimal point using dynamic programming, and then divide the strings recursively using a divide-and-conquer approach.
+
+- The mean time on the sample inputs between memory-efficient and basic versions is 0.034625, where the range of our input length is between 136-4352 characters.
+
+- Hence to save time, we are making a trade-off by using more memory.
+
+
+Analysis Based on Memory Usage
+- At about 1100 input length, the memory taken by the basic version is higher than the memory-efficient version.
+After about 2200 input length, the memory taken by the memory-efficient version remains constant whereas the memory taken by the basic version is much higher.
+
+- Between 0-1000 char input length, the memory required by basic and efficient version remains constant, but as the input size increases the memory required by the basic version increases at a higher rate whereas the memory-efficient version plot remains constant.
+
+- The memory taken by the basic version increases as we are finding a single optimal point using the dynamic programming technique, whereas in the memory-efficient version we find an optimal point using dynamic programming and use a divide and conquer approach to find the final alignment which reduces the memory required. As we are dividing the problem into smaller sub-problems, the space required for computation gets reduced.
+
+- As the memory size increases the cost also increases especially in the field of bioinformatics where gnomes and DNA alignments are to be computed. Here the sequence alignment algorithm implemented using the divide and conquer + dynamic programming hybrid approach saves the memory with a trade-off of higher CPU time.
+
+=================================================================
+
+Contributions :
+Aditya Dave (6268327263): Sequence Alignment using Divide and Conquer approach implementation
+Laxmi Garde (9928274684): Sequence Alignment using Dynamic Programming implementation
+Lavina Agarwal (3550221244): Plotting and test-case generation using Python.
+Teamwork - Debugging, testing, issue-resolving, discussions, building algorithm understanding, and coding best practices followed.
+
+=================================================================
+
+Sample testcase execution:
+input.txt
+ACTG
+3
+5
+8
+24
+50
+78
+100
+300
+TACG
+1
+3
+7
+19
+30
+20
+90
+68
+
+Basic version alignment output file generated:
+_ACTGACACTACTGACACTG_ACTGTG__ACTGACACTACTGACACTGAC C_ACTACTGACACTGACTGTGGACTGTG_GACTGTGACTGTG_GACTGTG
+TA_T_ATA_TA_T_ATA_TATAC_GCGTTA_T_ATA_TA_T_ATA_T_A_ CGA_TA_T_ACGC_G_C_GC_G_C_GCGCG_C_GCG_C_GCGCG_C_GCG
+23988.0
+0.083
+7018.25
+
+Memory efficient version alignment output file generated:
+_ACTGACACTACTGACACTG_ACTGTGACTGACACTACTGACACTGACTG C_ACTACTGACACTGACTGTGGACTGTG_GACTGTGACTGTG_GACTGTG
+TA_T_ATA_TA_T_ATA_TATAC_GCG_TT_ATA_TA_T_ATA_T_A_TA CGA_TA_T_ACGC_G_C_GC_G_C_GCGCG_C_GCG_C_GCGCG_C_GCG
+23988.0
+0.271
+3647.484375
+
+=================================================================
+
+All inputs tested on machines with following configurations:
+
+OS: macOS High Sierra 10.13.6 (17G65)
+Processor: 1.8 GHz Intel Core i5
+Memory: 8 GB 1600 MHz DDR3
+openjdk 11.0.7 2020-04-14 LTS
+OpenJDK Runtime Environment Corretto-11.0.7.10.1 (build 11.0.7+10-LTS)
+
+OS: Ubuntu 21.10
+Processor: Intel i5-10210U @ 1.60 GHz
+Memory: 20 GB
+openjdk 11.0.12 2021-07-20
+OpenJDK Runtime Environment (build 11.0.12+7-Ubuntu-0ubuntu3)
+OpenJDK 64-Bit Server VM (build 11.0.12+7-Ubuntu-0ubuntu3, mixed mode, sharing)
+
+Python version: 3.9.6
+
+=================================================================
+
+Contents of the zip:
+
+Folder name: 6268327263_9928274684_3550221244
+6268327263_9928274684_3550221244_basic.sh
+6268327263_9928274684_3550221244_efficient.sh
+algo_project_basic.jar
+algo_project_efficient.jar
+CPUPlot.png
+MemoryPlot.png
+algo_project folder (source code)
+Summary.txt
+Please place the input file to be tested in this folder. (output.txt will be generated in this folder)
+
+
+Steps to execute the shell scripts:
+> chmod 755 6268327263_9928274684_3550221244_basic.sh
+> ./6268327263_9928274684_3550221244_basic.sh input.txt
+
+> chmod 755 6268327263_9928274684_3550221244_efficient.sh
+> ./6268327263_9928274684_3550221244_efficient.sh input.txt
+
+=================================================================
