@@ -99,7 +99,7 @@ algo_project_basic.jar
 algo_project_efficient.jar
 CPUPlot.png
 MemoryPlot.png
-algo_project folder (source code)
+src folder (source code)
 Summary.txt
 Please place the input file to be tested in this folder. (output.txt will be generated in this folder)
 
