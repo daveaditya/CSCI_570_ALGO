@@ -220,10 +220,10 @@ public class SequenceAlignment {
         char[] leftOutputSecondAlignment = leftOutput.getSecondAlignment();
         char[] rightOutputSecondAlignment = rightOutput.getSecondAlignment();
         char[] secondAlignmentResult = new char[leftOutputSecondAlignment.length + rightOutputSecondAlignment.length];
-        for (int i = 0; i < leftOutputFirstAlignment.length; i++) {
-            secondAlignmentResult[i] = leftOutputFirstAlignment[i];
+        for (int i = 0; i < leftOutputSecondAlignment.length; i++) {
+            secondAlignmentResult[i] = leftOutputSecondAlignment[i];
         }
-        for (int i = leftOutputFirstAlignment.length, j = 0; i < firstAlignmentResult.length && j < rightOutputFirstAlignment.length; i++, j++) {
+        for (int i = leftOutputSecondAlignment.length, j = 0; i < secondAlignmentResult.length && j < rightOutputSecondAlignment.length; i++, j++) {
             secondAlignmentResult[i] = rightOutputSecondAlignment[j];
         }
 
