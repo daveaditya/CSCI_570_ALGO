@@ -37,7 +37,6 @@ public class MemoryEfficientAlignment {
 
             // Run divide and conquer version of sequence alignment
             AlignmentOutput alignmentOutput = sequenceAlignment.alignmentWithDivideAndConquer(firstGeneratedBase, secondGeneratedBase);
-            System.out.println(alignmentOutput);
 
             timer.end();
 

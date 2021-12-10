@@ -139,12 +139,13 @@ public class SequenceAlignment {
                         Math.min(
                                 MISMATCH_COST[ALPHABETS.get(X[i - 1])][ALPHABETS.get(Y[j - 1])] + B[0][j - 1],
                                 GAP_PENALTY + B[0][j]
-                        ), GAP_PENALTY + B[1][j - 1]);
+                        ), GAP_PENALTY + B[1][j - 1]
+                );
             }
 
-            // Swap the columns, to be ready for next iteration
+            // Swap the rows, to be ready for next iteration
             for (int k = 0; k <= n; k++) {
-                B[0][i] = B[1][i];
+                B[0][k] = B[1][k];
             }
         }
 

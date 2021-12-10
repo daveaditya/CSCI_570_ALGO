@@ -37,7 +37,6 @@ public class BasicAlignment {
 
             // Run basic version of sequence alignment
             AlignmentOutput alignmentOutput = sequenceAlignment.alignmentWithDynamicProgramming(firstGeneratedBase, secondGeneratedBase);
-            System.out.println(alignmentOutput);
 
             timer.end();
 
