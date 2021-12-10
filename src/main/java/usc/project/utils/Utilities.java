@@ -14,7 +14,7 @@ public class Utilities {
     public static String formatAlignment(char[] alignmentStr) {
         String outputAlignment;
         if(alignmentStr.length > 50){
-            outputAlignment = Arrays.toString(alignmentStr).substring(0, 50) + " " + Arrays.toString(alignmentStr).substring(alignmentStr.length - 50);
+            outputAlignment = new String(alignmentStr).substring(0, 50) + " " + new String(alignmentStr).substring(alignmentStr.length - 50);
         } else {
             // not required... can be removed
             outputAlignment = Arrays.toString(alignmentStr) + " " + Arrays.toString(alignmentStr);
